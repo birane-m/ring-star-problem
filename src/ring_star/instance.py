@@ -22,6 +22,7 @@ class RingStarInstance:
     name: str
     points: tuple[Point, ...]
     required_station: int = 0
+    edge_weight_type: str | None = None
 
     def __post_init__(self) -> None:
         points = _normalize_points(self.points)
