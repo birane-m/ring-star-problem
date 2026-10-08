@@ -7,6 +7,7 @@ from ring_star.heuristics import (
     nearest_neighbor_cycle,
     select_stations_farthest_first,
     select_stations_grid_then_complete,
+    two_opt_cycle,
 )
 from ring_star.instance import RingStarInstance, RingStarProblem
 from ring_star.validation import validate_solution
@@ -50,12 +51,34 @@ class HeuristicTests(unittest.TestCase):
         self.assertEqual(set(cycle), {0, 2, 4})
         self.assertEqual(len(cycle), 3)
 
+    def test_two_opt_cycle_keeps_same_stations_and_start(self):
+        cycle = two_opt_cycle((0, 1, 4, 2), self.distances)
+
+        self.assertEqual(cycle[0], 0)
+        self.assertEqual(set(cycle), {0, 1, 2, 4})
+        self.assertEqual(len(cycle), 4)
+
+    def test_two_opt_cycle_does_not_worsen_cycle_length(self):
+        initial = (0, 1, 4, 2)
+        improved = two_opt_cycle(initial, self.distances)
+
+        self.assertLessEqual(
+            self._cycle_length(improved),
+            self._cycle_length(initial),
+        )
+
     def test_build_greedy_solution_returns_valid_solution(self):
         solution = build_greedy_solution(self.problem)
 
         validate_solution(self.problem, solution)
         self.assertEqual(len(solution.stations), self.problem.p)
         self.assertIn(self.problem.required_station, solution.stations)
+
+    def _cycle_length(self, cycle):
+        return sum(
+            self.distances[station_a][station_b]
+            for station_a, station_b in zip(cycle, cycle[1:] + cycle[:1])
+        )
 
 
 if __name__ == "__main__":

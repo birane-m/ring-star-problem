@@ -8,7 +8,7 @@ The Ring-Star problem mixes two decisions:
 This module implements a first deterministic constructive heuristic. It follows
 the idea suggested in the subject: select geographically spread stations with a
 grid, assign each point to its nearest station, then build a station cycle with
-the nearest-neighbor TSP heuristic.
+the nearest-neighbor TSP heuristic improved by 2-opt.
 """
 
 from __future__ import annotations
@@ -137,6 +137,45 @@ def nearest_neighbor_cycle(
     return tuple(cycle)
 
 
+def two_opt_cycle(
+    cycle: tuple[int, ...],
+    distances: DistanceMatrix,
+) -> tuple[int, ...]:
+    """Improve a station cycle with the 2-opt local search.
+
+    2-opt is the TSP improvement requested in the subject after the
+    nearest-neighbor heuristic. It repeatedly removes two edges and reconnects
+    the cycle by reversing the segment between them. A reversal is kept only
+    when it strictly shortens the cycle.
+
+    The first station is kept fixed so the returned cycle still starts from the
+    required station.
+    """
+
+    if len(cycle) < 4:
+        return cycle
+
+    best = list(cycle)
+    improved = True
+
+    while improved:
+        improved = False
+        for i in range(1, len(best) - 1):
+            for j in range(i + 1, len(best)):
+                if j - i == 1:
+                    continue
+
+                candidate = best[:i] + list(reversed(best[i:j])) + best[j:]
+                if _cycle_length(candidate, distances) < _cycle_length(best, distances):
+                    best = candidate
+                    improved = True
+                    break
+            if improved:
+                break
+
+    return tuple(best)
+
+
 def build_greedy_solution(problem: RingStarProblem) -> RingStarSolution:
     """Build a valid Ring-Star solution with the constructive heuristic.
 
@@ -146,13 +185,17 @@ def build_greedy_solution(problem: RingStarProblem) -> RingStarSolution:
     2. select p stations with the grid-based heuristic;
     3. assign every point to its nearest station;
     4. build a nearest-neighbor cycle on selected stations;
-    5. validate the resulting Ring-Star solution.
+    5. improve this cycle with 2-opt, as requested for the TSP part;
+    6. validate the resulting Ring-Star solution.
     """
 
     distances = build_distance_matrix(problem.instance.points)
     stations = select_stations_grid_then_complete(problem, distances)
     assignments = assign_to_nearest_station(stations, distances)
-    cycle = nearest_neighbor_cycle(stations, distances, problem.required_station)
+    cycle = two_opt_cycle(
+        nearest_neighbor_cycle(stations, distances, problem.required_station),
+        distances,
+    )
     solution = RingStarSolution(
         stations=stations,
         cycle=cycle,
@@ -311,3 +354,10 @@ def _squared_distance(point_a: Point, point_b: Point) -> float:
     """
 
     return (point_a[0] - point_b[0]) ** 2 + (point_a[1] - point_b[1]) ** 2
+
+
+def _cycle_length(cycle: list[int], distances: DistanceMatrix) -> float:
+    return sum(
+        distances[station_a][station_b]
+        for station_a, station_b in zip(cycle, cycle[1:] + cycle[:1])
+    )

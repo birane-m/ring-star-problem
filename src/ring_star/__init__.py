@@ -8,6 +8,15 @@ from ring_star.heuristics import (
 )
 from ring_star.instance import RingStarInstance, RingStarProblem
 from ring_star.io import TsplibFormatError, load_tsplib_instance
+from ring_star.metaheuristics import (
+    LocalSearchResult,
+    TabuSearchResult,
+    build_local_search_solution,
+    build_solution_from_stations,
+    build_tabu_search_solution,
+    improve_with_station_swaps,
+    improve_with_tabu_search,
+)
 from ring_star.results import (
     save_solution_result_json,
     save_solution_result_markdown,
@@ -25,11 +34,18 @@ __all__ = [
     "RingStarInstance",
     "RingStarProblem",
     "RingStarSolution",
+    "LocalSearchResult",
+    "TabuSearchResult",
     "SolutionCosts",
     "select_stations_farthest_first",
     "SolutionValidationError",
     "TsplibFormatError",
     "load_tsplib_instance",
+    "build_local_search_solution",
+    "build_solution_from_stations",
+    "build_tabu_search_solution",
+    "improve_with_station_swaps",
+    "improve_with_tabu_search",
     "save_solution_result_json",
     "save_solution_result_markdown",
     "save_point_cloud_png",
