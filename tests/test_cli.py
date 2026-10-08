@@ -1,3 +1,5 @@
+import csv
+import os
 import tempfile
 import textwrap
 import unittest
@@ -8,6 +10,12 @@ from importlib.util import find_spec
 from pathlib import Path
 
 from ring_star.cli import (
+    default_benchmark_output_path,
+    default_benchmark_solution_figures_directory,
+    default_comparison_figures_directory,
+    default_comparison_output_path,
+    default_exact_result_output_path,
+    default_exact_solution_output_path,
     default_tabu_result_output_path,
     default_tabu_solution_output_path,
     default_local_search_result_output_path,
@@ -67,6 +75,42 @@ class CliTests(unittest.TestCase):
         self.assertEqual(
             default_tabu_result_output_path("data/att48.tsp", 10),
             Path("outputs/results/metaheuristics/att48_tabu_p10.json"),
+        )
+
+    def test_default_exact_solution_output_path(self):
+        self.assertEqual(
+            default_exact_solution_output_path("data/att48.tsp", 10),
+            Path("outputs/figures/exact/att48_exact_p10.png"),
+        )
+
+    def test_default_exact_result_output_path(self):
+        self.assertEqual(
+            default_exact_result_output_path("data/att48.tsp", 10),
+            Path("outputs/results/exact/att48_exact_p10.json"),
+        )
+
+    def test_default_benchmark_output_path(self):
+        self.assertEqual(
+            default_benchmark_output_path(),
+            Path("outputs/results/benchmarks/robustness.csv"),
+        )
+
+    def test_default_comparison_output_path(self):
+        self.assertEqual(
+            default_comparison_output_path(),
+            Path("outputs/results/benchmarks/comparaison_methodes.csv"),
+        )
+
+    def test_default_comparison_figures_directory(self):
+        self.assertEqual(
+            default_comparison_figures_directory(),
+            Path("outputs/figures/benchmarks"),
+        )
+
+    def test_default_benchmark_solution_figures_directory(self):
+        self.assertEqual(
+            default_benchmark_solution_figures_directory(),
+            Path("outputs/figures/benchmark_solutions"),
         )
 
     @unittest.skipIf(find_spec("matplotlib") is None, "matplotlib is not installed")
@@ -217,6 +261,47 @@ class CliTests(unittest.TestCase):
             self.assertIn("stations", data)
             self.assertIn("assignments", data)
             self.assertIn("costs", data)
+
+    @unittest.skipIf(find_spec("matplotlib") is None, "matplotlib is not installed")
+    def test_run_command_writes_plot_json_and_markdown(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory_path = Path(directory)
+            tsp_path = directory_path / "tiny.tsp"
+            tsp_path.write_text(
+                textwrap.dedent(
+                    """
+                    NAME : tiny
+                    TYPE : TSP
+                    DIMENSION : 4
+                    EDGE_WEIGHT_TYPE : EUC_2D
+                    NODE_COORD_SECTION
+                    1 0 0
+                    2 3 0
+                    3 3 4
+                    4 0 4
+                    EOF
+                    """
+                ).strip(),
+                encoding="utf-8",
+            )
+            previous_cwd = Path.cwd()
+            try:
+                os.chdir(directory_path)
+                output = StringIO()
+                with redirect_stdout(output):
+                    exit_code = main(["run", "gloutonne", str(tsp_path), "3"])
+            finally:
+                os.chdir(previous_cwd)
+
+            json_path = directory_path / "outputs/results/heuristics/tiny_greedy_p3.json"
+            markdown_path = json_path.with_suffix(".md")
+            plot_path = directory_path / "outputs/figures/heuristics/tiny_greedy_p3.png"
+            data = json.loads(json_path.read_text(encoding="utf-8"))
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(data["method"], "greedy")
+            self.assertTrue(markdown_path.exists())
+            self.assertTrue(plot_path.exists())
+            self.assertIn("summary:", output.getvalue())
 
     def test_solve_local_search_command_prints_solution_summary(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -383,6 +468,123 @@ class CliTests(unittest.TestCase):
             self.assertEqual(exit_code, 0)
             self.assertEqual(data["method"], "tabu_search")
             self.assertTrue(output_path.with_suffix(".md").exists())
+
+    @unittest.skipIf(find_spec("pulp") is None, "PuLP is not installed")
+    def test_solve_exact_command_prints_solution_summary(self):
+        with tempfile.TemporaryDirectory() as directory:
+            tsp_path = Path(directory) / "tiny.tsp"
+            tsp_path.write_text(
+                textwrap.dedent(
+                    """
+                    NAME : tiny
+                    TYPE : TSP
+                    DIMENSION : 4
+                    EDGE_WEIGHT_TYPE : EUC_2D
+                    NODE_COORD_SECTION
+                    1 0 0
+                    2 3 0
+                    3 3 4
+                    4 0 4
+                    EOF
+                    """
+                ).strip(),
+                encoding="utf-8",
+            )
+
+            output = StringIO()
+            with redirect_stdout(output):
+                exit_code = main(["solve-exact", str(tsp_path), "3"])
+
+            self.assertEqual(exit_code, 0)
+            self.assertIn("Instance: tiny", output.getvalue())
+            self.assertIn("status: Optimal", output.getvalue())
+            self.assertIn("total_cost:", output.getvalue())
+
+    @unittest.skipIf(find_spec("pulp") is None, "PuLP is not installed")
+    def test_solve_exact_command_can_write_result_json(self):
+        with tempfile.TemporaryDirectory() as directory:
+            tsp_path = Path(directory) / "tiny.tsp"
+            output_path = Path(directory) / "result.json"
+            tsp_path.write_text(
+                textwrap.dedent(
+                    """
+                    NAME : tiny
+                    TYPE : TSP
+                    DIMENSION : 4
+                    EDGE_WEIGHT_TYPE : EUC_2D
+                    NODE_COORD_SECTION
+                    1 0 0
+                    2 3 0
+                    3 3 4
+                    4 0 4
+                    EOF
+                    """
+                ).strip(),
+                encoding="utf-8",
+            )
+
+            with redirect_stdout(StringIO()):
+                exit_code = main(
+                    [
+                        "solve-exact",
+                        str(tsp_path),
+                        "3",
+                        "--save-result",
+                        "--result-output",
+                        str(output_path),
+                    ]
+                )
+
+            data = json.loads(output_path.read_text(encoding="utf-8"))
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(data["method"], "exact_plne")
+            self.assertTrue(output_path.with_suffix(".md").exists())
+
+    def test_benchmark_command_writes_csv(self):
+        with tempfile.TemporaryDirectory() as directory:
+            tsp_path = Path(directory) / "tiny.tsp"
+            output_path = Path(directory) / "benchmark.csv"
+            tsp_path.write_text(
+                textwrap.dedent(
+                    """
+                    NAME : tiny
+                    TYPE : TSP
+                    DIMENSION : 4
+                    EDGE_WEIGHT_TYPE : EUC_2D
+                    NODE_COORD_SECTION
+                    1 0 0
+                    2 3 0
+                    3 3 4
+                    4 0 4
+                    EOF
+                    """
+                ).strip(),
+                encoding="utf-8",
+            )
+
+            output = StringIO()
+            with redirect_stdout(output):
+                exit_code = main(
+                    [
+                        "benchmark",
+                        str(tsp_path),
+                        "--methods",
+                        "greedy",
+                        "local_search",
+                        "--p-values",
+                        "3",
+                        "--local-iterations",
+                        "5",
+                        "--output",
+                        str(output_path),
+                    ]
+                )
+
+            with output_path.open(encoding="utf-8") as csv_file:
+                rows = list(csv.DictReader(csv_file))
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(len(rows), 2)
+            self.assertIn("benchmark:", output.getvalue())
 
 
 if __name__ == "__main__":

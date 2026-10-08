@@ -1,5 +1,12 @@
 """Core tools for the Ring-Star optimization problem."""
 
+from ring_star.benchmark import (
+    BENCHMARK_METHODS,
+    BenchmarkRecord,
+    default_benchmark_p_values,
+    run_benchmark,
+    save_benchmark_csv,
+)
 from ring_star.heuristics import (
     assign_to_nearest_station,
     build_greedy_solution,
@@ -8,6 +15,12 @@ from ring_star.heuristics import (
 )
 from ring_star.instance import RingStarInstance, RingStarProblem
 from ring_star.io import TsplibFormatError, load_tsplib_instance
+from ring_star.exact import (
+    ExactSolveError,
+    ExactSolveResult,
+    ExactSolverUnavailableError,
+    solve_exact_solution,
+)
 from ring_star.metaheuristics import (
     LocalSearchResult,
     TabuSearchResult,
@@ -29,11 +42,16 @@ from ring_star.visualization import save_point_cloud_png, save_solution_png
 
 __all__ = [
     "assign_to_nearest_station",
+    "BENCHMARK_METHODS",
+    "BenchmarkRecord",
     "build_greedy_solution",
     "nearest_neighbor_cycle",
     "RingStarInstance",
     "RingStarProblem",
     "RingStarSolution",
+    "ExactSolveError",
+    "ExactSolveResult",
+    "ExactSolverUnavailableError",
     "LocalSearchResult",
     "TabuSearchResult",
     "SolutionCosts",
@@ -41,6 +59,10 @@ __all__ = [
     "SolutionValidationError",
     "TsplibFormatError",
     "load_tsplib_instance",
+    "default_benchmark_p_values",
+    "run_benchmark",
+    "save_benchmark_csv",
+    "solve_exact_solution",
     "build_local_search_solution",
     "build_solution_from_stations",
     "build_tabu_search_solution",
