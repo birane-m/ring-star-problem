@@ -1,36 +1,27 @@
-"""Benchmark helpers for comparing Ring-Star solution methods."""
-
+"""Measured runs, lossless CSV export and alpha-aware legacy comparisons."""
 from __future__ import annotations
 
 import csv
-import os
-import time
-from dataclasses import dataclass
+import json
+from dataclasses import dataclass, field
 from pathlib import Path
+from statistics import mean
 from typing import Iterable
 
 from ring_star.distances import build_distance_matrix
-from ring_star.exact import ExactSolveError, ExactSolverUnavailableError, solve_exact_solution
-from ring_star.heuristics import (
-    assign_to_nearest_station,
-    build_greedy_solution,
-    nearest_neighbor_cycle,
-    two_opt_cycle,
-)
+from ring_star.execution import METHODS, RunConfig, RunResult, execute
 from ring_star.instance import RingStarProblem
 from ring_star.io import load_tsplib_instance
-from ring_star.metaheuristics import build_local_search_solution, build_tabu_search_solution
 from ring_star.solution import RingStarSolution
-from ring_star.visualization import save_solution_png
+from ring_star.validation import validate_solution
 
-BENCHMARK_METHODS = ("greedy", "local_search", "tabu_search", "exact_plne")
-COMPARISON_METHODS = ("greedy", "local_search", "tabu_search", "exact_plne")
+BENCHMARK_METHODS = METHODS
+COMPARISON_METHODS = METHODS
+SUCCESS = {"ok", "optimal", "Optimal", "feasible_time_limited", "feasible"}
 
 
 @dataclass(frozen=True)
 class BenchmarkRecord:
-    """One method run on one instance and one value of p."""
-
     instance: str
     n: int
     p: int
@@ -43,661 +34,190 @@ class BenchmarkRecord:
     elapsed_seconds: float
     stations: tuple[int, ...]
     error: str | None = None
+    seed: int = 0
+    cycle: tuple[int, ...] = ()
+    assignments: tuple[int, ...] = ()
+    optimal: bool = False
+    lower_bound: float | None = None
+    relative_gap: float | None = None
+    configuration: dict = field(default_factory=dict)
+    solution_file: str = ""
+    run_result: RunResult | None = field(default=None, repr=False, compare=False)
 
 
 def default_benchmark_p_values(n: int) -> tuple[int, ...]:
-    """Return increasing representative p values for an instance size."""
+    return tuple(sorted({p for p in (3, max(3, round(.15*n)), max(3, round(.30*n))) if p <= n}))
 
-    candidates = {
-        3,
-        max(3, round(0.15 * n)),
-        max(3, round(0.30 * n)),
-    }
-    return tuple(sorted(p for p in candidates if 3 <= p <= n))
+
+def record_from_run(problem: RingStarProblem, result: RunResult, solution_file: str = "") -> BenchmarkRecord:
+    from dataclasses import asdict
+    solution = result.solution
+    costs = solution.costs(build_distance_matrix(problem.instance.points), problem.alpha) if solution else None
+    return BenchmarkRecord(
+        problem.instance.name, problem.instance.n, problem.p, problem.alpha,
+        result.config.method, result.status, costs.total if costs else None,
+        costs.metro if costs else None, costs.walking if costs else None,
+        result.elapsed_seconds, tuple(s+1 for s in sorted(solution.stations)) if solution else (),
+        result.error, result.config.seed,
+        tuple(s+1 for s in solution.cycle) if solution else (),
+        tuple(s+1 for s in solution.assignments) if solution else (), result.optimal,
+        result.lower_bound, result.relative_gap, asdict(result.config), solution_file, result,
+    )
 
 
 def run_benchmark(
-    instance_paths: Iterable[str | Path],
-    *,
-    methods: Iterable[str] = BENCHMARK_METHODS,
-    p_values: Iterable[int] | None = None,
-    alpha: float = 1.0,
-    seed: int = 0,
-    local_iterations: int | None = None,
-    tabu_iterations: int | None = None,
-    tabu_tenure: int = 20,
-    candidates_per_iteration: int | None = None,
-    exact_time_limit: int | None = 10,
-    exact_max_n: int | None = 22,
+    instance_paths: Iterable[str | Path], *, methods: Iterable[str] = BENCHMARK_METHODS,
+    p_values: Iterable[int] | None = None, alpha: float = 1.0, seed: int = 0,
+    seeds: Iterable[int] | None = None, local_iterations: int | None = None,
+    tabu_iterations: int | None = None, tabu_tenure: int = 20,
+    candidates_per_iteration: int | None = None, exact_time_limit: float | None = 10,
+    exact_max_n: int | None = 22, search_time_limit: float | None = None,
 ) -> list[BenchmarkRecord]:
-    """Run several methods on several instances and p values."""
-
     selected_methods = tuple(methods)
-    _validate_methods(selected_methods)
-    records: list[BenchmarkRecord] = []
-
-    for instance_path in instance_paths:
-        instance = load_tsplib_instance(instance_path)
-        selected_p_values = (
-            tuple(p_values)
-            if p_values is not None
-            else default_benchmark_p_values(instance.n)
-        )
-
-        for p in selected_p_values:
-            if not 3 <= p <= instance.n:
-                records.append(
-                    BenchmarkRecord(
-                        instance=instance.name,
-                        n=instance.n,
-                        p=p,
-                        alpha=alpha,
-                        method="input",
-                        status="skipped",
-                        total_cost=None,
-                        metro_cost=None,
-                        walking_cost=None,
-                        elapsed_seconds=0.0,
-                        stations=(),
-                        error="p must satisfy 3 <= p <= n",
-                    )
-                )
+    if not selected_methods or set(selected_methods) - set(METHODS):
+        raise ValueError("Benchmark methods must be nonempty and supported.")
+    ps = tuple(p_values) if p_values is not None else None
+    selected_seeds = tuple(seeds) if seeds is not None else (seed,)
+    if not selected_seeds or len(set(selected_seeds)) != len(selected_seeds):
+        raise ValueError("Seeds must be nonempty and unique.")
+    records = []
+    for path in instance_paths:
+        instance = load_tsplib_instance(path)
+        for p in ps if ps is not None else default_benchmark_p_values(instance.n):
+            if type(p) is not int or not 3 <= p <= instance.n:
+                records.append(BenchmarkRecord(instance.name, instance.n, p, alpha, "input", "skipped",
+                                               None, None, None, 0.0, (), "p must satisfy 3 <= p <= n"))
                 continue
-
-            problem = RingStarProblem(instance=instance, p=p, alpha=alpha)
+            problem = RingStarProblem(instance, p, alpha)
             for method in selected_methods:
-                records.append(
-                    _run_one_method(
-                        problem,
-                        method=method,
-                        seed=seed,
-                        local_iterations=local_iterations,
-                        tabu_iterations=tabu_iterations,
-                        tabu_tenure=tabu_tenure,
-                        candidates_per_iteration=candidates_per_iteration,
-                        exact_time_limit=exact_time_limit,
-                        exact_max_n=exact_max_n,
-                    )
-                )
-
+                if method == "exact_plne" and exact_max_n is not None and instance.n > exact_max_n:
+                    records.append(BenchmarkRecord(instance.name, instance.n, p, alpha, method, "skipped",
+                                                   None, None, None, 0.0, (), f"n > exact_max_n={exact_max_n}"))
+                    continue
+                for current_seed in selected_seeds if method in {"local_search", "tabu_search"} else selected_seeds[:1]:
+                    config = RunConfig(method=method, seed=current_seed,
+                                       iterations=local_iterations if method == "local_search" else tabu_iterations if method == "tabu_search" else None,
+                                       tabu_tenure=tabu_tenure, candidates_per_iteration=candidates_per_iteration,
+                                       time_limit=exact_time_limit if method == "exact_plne" else None,
+                                       search_time_limit=search_time_limit if method in {"local_search", "tabu_search"} else None)
+                    records.append(record_from_run(problem, execute(problem, config)))
     return records
 
 
-def save_benchmark_csv(records: Iterable[BenchmarkRecord], output_path: str | Path) -> Path:
-    """Write benchmark records as a CSV file."""
+CSV_FIELDS = ["instance", "n", "p", "alpha", "method", "status", "total_cost", "metro_cost",
+              "walking_cost", "elapsed_seconds", "stations", "error", "seed", "cycle", "assignments",
+              "optimal", "lower_bound", "relative_gap", "configuration", "solution_file"]
 
-    output_path = Path(output_path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    fieldnames = [
-        "instance",
-        "n",
-        "p",
-        "alpha",
-        "method",
-        "status",
-        "total_cost",
-        "metro_cost",
-        "walking_cost",
-        "elapsed_seconds",
-        "stations",
-        "error",
-    ]
-    with output_path.open("w", encoding="utf-8", newline="") as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+def save_benchmark_csv(records: Iterable[BenchmarkRecord], output_path: str | Path) -> Path:
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=CSV_FIELDS)
         writer.writeheader()
         for record in records:
-            writer.writerow(
-                {
-                    "instance": record.instance,
-                    "n": record.n,
-                    "p": record.p,
-                    "alpha": record.alpha,
-                    "method": record.method,
-                    "status": record.status,
-                    "total_cost": _format_optional_float(record.total_cost),
-                    "metro_cost": _format_optional_float(record.metro_cost),
-                    "walking_cost": _format_optional_float(record.walking_cost),
-                    "elapsed_seconds": f"{record.elapsed_seconds:.6f}",
-                    "stations": " ".join(str(station) for station in record.stations),
-                    "error": record.error or "",
-                }
-            )
-    return output_path
+            row = {key: getattr(record, key) for key in CSV_FIELDS}
+            for key in ("stations", "cycle", "assignments"):
+                row[key] = " ".join(str(x) for x in row[key])
+            row["configuration"] = json.dumps(record.configuration, sort_keys=True)
+            for key in ("total_cost", "metro_cost", "walking_cost", "elapsed_seconds", "lower_bound", "relative_gap"):
+                row[key] = "" if row[key] is None else f"{row[key]:.12g}"
+            writer.writerow(row)
+    return path
 
 
-def build_comparison_csv(
-    greedy_csv: str | Path,
-    metaheuristics_csv: str | Path,
-    exact_csv: str | Path | None,
-    output_path: str | Path,
-) -> Path:
-    """Merge benchmark CSV files into one comparison table."""
+def build_comparison_csv(greedy_csv: str | Path, metaheuristics_csv: str | Path,
+                         exact_csv: str | Path | None, output_path: str | Path) -> Path:
+    """Aggregate seeds per (instance, p, alpha); retain all runs in source CSVs.
 
-    rows_by_case: dict[tuple[str, int], dict[str, str]] = {}
-    for source_path in (greedy_csv, metaheuristics_csv, exact_csv):
-        if source_path is None:
+    This importer is for older CSVs as well. New campaigns also export full
+    distribution summaries; duplicate seed/method rows are rejected.
+    """
+    cases: dict[tuple[str, int, float], dict] = {}
+    seen = set()
+    for source in (greedy_csv, metaheuristics_csv, exact_csv):
+        if source is None or not Path(source).exists():
             continue
-        path = Path(source_path)
-        if not path.exists():
-            continue
-        for row in _read_csv_rows(path):
-            if row["status"] not in {"ok", "optimal", "feasible_time_limited"}:
-                _ensure_case(rows_by_case, row)
-                rows_by_case[(row["instance"], int(row["p"]))]["exact_status"] = row["status"]
-                continue
-
-            case = _ensure_case(rows_by_case, row)
+        for row in _read_csv_rows(source):
+            key = (row["instance"].removesuffix(".tsp"), int(row["p"]), float(row["alpha"]))
+            case = cases.setdefault(key, {"instance": key[0], "n": row["n"], "p": key[1], "alpha": key[2], "exact_status": "", "samples": {}})
             method = row["method"]
-            if method not in COMPARISON_METHODS:
-                continue
-            case[f"{method}_cost"] = row["total_cost"]
-            case[f"{method}_time"] = row["elapsed_seconds"]
             if method == "exact_plne":
                 case["exact_status"] = row["status"]
-
-    comparison_rows = []
-    for case in rows_by_case.values():
-        costs = {
-            method: _optional_float(case.get(f"{method}_cost"))
-            for method in COMPARISON_METHODS
-        }
-        available_costs = {
-            method: cost
-            for method, cost in costs.items()
-            if cost is not None
-        }
-        if available_costs:
-            best_method = min(available_costs, key=available_costs.get)
-            best_cost = available_costs[best_method]
-        else:
-            best_method = ""
-            best_cost = None
-
-        greedy_cost = costs["greedy"]
-        gain = (
-            (greedy_cost - best_cost) / greedy_cost * 100
-            if greedy_cost is not None and best_cost is not None and greedy_cost > 0
-            else None
-        )
-        comparison_rows.append(
-            {
-                **case,
-                "best_method": best_method,
-                "best_cost": _format_optional_float(best_cost),
-                "gain_best_vs_greedy_percent": _format_optional_float(gain),
-            }
-        )
-
-    output_path = Path(output_path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    fieldnames = [
-        "instance",
-        "n",
-        "p",
-        "alpha",
-        "greedy_cost",
-        "local_search_cost",
-        "tabu_search_cost",
-        "exact_plne_cost",
-        "greedy_time",
-        "local_search_time",
-        "tabu_search_time",
-        "exact_plne_time",
-        "exact_status",
-        "best_method",
-        "best_cost",
-        "gain_best_vs_greedy_percent",
-    ]
-    with output_path.open("w", encoding="utf-8", newline="") as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            if method not in METHODS or row["status"] not in SUCCESS:
+                continue
+            run_key = (*key, method, row.get("seed", "0"))
+            if run_key in seen:
+                raise ValueError(f"Duplicate method/seed row in comparison: {run_key}.")
+            seen.add(run_key)
+            case["samples"].setdefault(method, []).append((float(row["total_cost"]), float(row["elapsed_seconds"])))
+    rows = []
+    for case in cases.values():
+        samples = case.pop("samples")
+        costs = {}
+        for method, values in samples.items():
+            costs[method] = mean(x[0] for x in values)
+            case[f"{method}_cost"] = f"{costs[method]:.6f}"
+            case[f"{method}_time"] = f"{mean(x[1] for x in values):.6f}"
+        best_method = min(costs, key=costs.get) if costs else ""
+        best = costs.get(best_method)
+        greedy = costs.get("greedy")
+        case.update(best_method=best_method, best_cost="" if best is None else f"{best:.6f}",
+                    gain_best_vs_greedy_percent="" if best is None or greedy is None or greedy <= 0 else f"{(greedy-best)/greedy*100:.6f}")
+        rows.append(case)
+    fields = ["instance", "n", "p", "alpha", *(f"{m}_cost" for m in METHODS), *(f"{m}_time" for m in METHODS),
+              "exact_status", "best_method", "best_cost", "gain_best_vs_greedy_percent"]
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields)
         writer.writeheader()
-        for row in sorted(
-            comparison_rows,
-            key=lambda item: (int(item["n"]), item["instance"], int(item["p"])),
-        ):
-            writer.writerow({field: row.get(field, "") for field in fieldnames})
-    return output_path
-
-
-def save_benchmark_comparison_plots(
-    comparison_csv: str | Path,
-    output_directory: str | Path,
-) -> list[Path]:
-    """Generate report-ready PNG plots from a comparison CSV file."""
-
-    os.environ.setdefault("MPLCONFIGDIR", ".matplotlib-cache")
-
-    try:
-        import matplotlib.pyplot as plt
-    except ModuleNotFoundError as error:
-        raise RuntimeError(
-            "matplotlib is required to generate benchmark comparison plots."
-        ) from error
-
-    rows = _read_csv_rows(comparison_csv)
-    output_directory = Path(output_directory)
-    output_directory.mkdir(parents=True, exist_ok=True)
-
-    saved_paths = [
-        _plot_cost_by_p(rows, output_directory / "cout_total_par_p.png", plt),
-        _plot_runtime_by_p(rows, output_directory / "temps_calcul_par_p.png", plt),
-        _plot_gain_by_instance(rows, output_directory / "gain_meta_vs_glouton.png", plt),
-    ]
-    return saved_paths
-
-
-def save_solution_plots_from_benchmark_csv(
-    benchmark_csv: str | Path,
-    instances_directory: str | Path,
-    output_directory: str | Path,
-    *,
-    tsp_exact_cycle_limit: int = 18,
-) -> list[Path]:
-    """Generate one solution PNG per successful row in a benchmark CSV.
-
-    Benchmark CSV files store the selected stations, not the complete cycle.
-    For visualization, the assignments are rebuilt by nearest station and the
-    metro cycle is rebuilt on the selected stations.  For small station sets,
-    the cycle is the exact TSP cycle over those stations; otherwise it falls
-    back to nearest-neighbor plus 2-opt.
-    """
-
-    instances_directory = Path(instances_directory)
-    output_directory = Path(output_directory)
-    rows = _read_csv_rows(benchmark_csv)
-    instance_paths = {
-        path.stem: path
-        for path in instances_directory.glob("*.tsp")
-    }
-    instance_paths.update(
-        {
-            path.name: path
-            for path in instances_directory.glob("*.tsp")
-        }
-    )
-    saved_paths: list[Path] = []
-
-    for row in rows:
-        if row.get("status") not in {"ok", "optimal", "feasible_time_limited"}:
-            continue
-        if not row.get("stations"):
-            continue
-
-        instance_path = instance_paths.get(row["instance"])
-        if instance_path is None:
-            instance_path = instance_paths.get(Path(row["instance"]).stem)
-        if instance_path is None:
-            continue
-
-        instance = load_tsplib_instance(instance_path)
-        distances = build_distance_matrix(instance.points)
-        stations = frozenset(int(station) - 1 for station in row["stations"].split())
-        assignments = assign_to_nearest_station(stations, distances)
-        cycle = _cycle_for_visualization(
-            stations,
-            distances,
-            instance.required_station,
-            tsp_exact_cycle_limit=tsp_exact_cycle_limit,
-            use_exact_cycle=row["method"] == "exact_plne",
-        )
-        solution = RingStarSolution(stations, cycle, assignments)
-        method = row["method"]
-        output_path = (
-            output_directory
-            / method
-            / f"{Path(row['instance']).stem}_p{row['p']}_{method}.png"
-        )
-        saved_paths.append(
-            save_solution_png(
-                instance,
-                solution,
-                output_path,
-                title=f"{_method_label(method)} - {instance.name} - p={row['p']}",
-            )
-        )
-
-    return saved_paths
-
-
-def _run_one_method(
-    problem: RingStarProblem,
-    *,
-    method: str,
-    seed: int,
-    local_iterations: int | None,
-    tabu_iterations: int | None,
-    tabu_tenure: int,
-    candidates_per_iteration: int | None,
-    exact_time_limit: int | None,
-    exact_max_n: int | None,
-) -> BenchmarkRecord:
-    if method == "exact_plne" and exact_max_n is not None and problem.instance.n > exact_max_n:
-        return BenchmarkRecord(
-            instance=problem.instance.name,
-            n=problem.instance.n,
-            p=problem.p,
-            alpha=problem.alpha,
-            method=method,
-            status="skipped",
-            total_cost=None,
-            metro_cost=None,
-            walking_cost=None,
-            elapsed_seconds=0.0,
-            stations=(),
-            error=f"n is greater than exact_max_n={exact_max_n}",
-        )
-
-    start = time.perf_counter()
-    try:
-        distances = build_distance_matrix(problem.instance.points)
-        if method == "greedy":
-            solution = build_greedy_solution(problem)
-            status = "ok"
-        elif method == "local_search":
-            solution = build_local_search_solution(
-                problem,
-                iterations=local_iterations,
-                seed=seed,
-            ).best_solution
-            status = "ok"
-        elif method == "tabu_search":
-            solution = build_tabu_search_solution(
-                problem,
-                iterations=tabu_iterations,
-                seed=seed,
-                tabu_tenure=tabu_tenure,
-                candidates_per_iteration=candidates_per_iteration,
-            ).best_solution
-            status = "ok"
-        elif method == "exact_plne":
-            exact_result = solve_exact_solution(
-                problem,
-                time_limit=exact_time_limit,
-                solver_message=False,
-            )
-            solution = exact_result.solution
-            status = exact_result.status.lower()
-        else:
-            raise ValueError(f"Unsupported benchmark method: {method}")
-
-        costs = solution.costs(distances, problem.alpha)
-        elapsed = time.perf_counter() - start
-        return BenchmarkRecord(
-            instance=problem.instance.name,
-            n=problem.instance.n,
-            p=problem.p,
-            alpha=problem.alpha,
-            method=method,
-            status=status,
-            total_cost=costs.total,
-            metro_cost=costs.metro,
-            walking_cost=costs.walking,
-            elapsed_seconds=elapsed,
-            stations=tuple(station + 1 for station in sorted(solution.stations)),
-        )
-    except (ExactSolveError, ExactSolverUnavailableError, ValueError) as error:
-        elapsed = time.perf_counter() - start
-        return BenchmarkRecord(
-            instance=problem.instance.name,
-            n=problem.instance.n,
-            p=problem.p,
-            alpha=problem.alpha,
-            method=method,
-            status="error",
-            total_cost=None,
-            metro_cost=None,
-            walking_cost=None,
-            elapsed_seconds=elapsed,
-            stations=(),
-            error=str(error),
-        )
-
-
-def _validate_methods(methods: tuple[str, ...]) -> None:
-    unknown_methods = sorted(set(methods) - set(BENCHMARK_METHODS))
-    if unknown_methods:
-        raise ValueError(f"Unsupported methods: {', '.join(unknown_methods)}")
-
-
-def _format_optional_float(value: float | None) -> str:
-    if value is None:
-        return ""
-    return f"{value:.6f}"
+        writer.writerows(sorted(rows, key=lambda r: (int(r["n"]), r["instance"], r["alpha"], r["p"])))
+    return path
 
 
 def _read_csv_rows(path: str | Path) -> list[dict[str, str]]:
-    with Path(path).open(encoding="utf-8", newline="") as csv_file:
-        return list(csv.DictReader(csv_file))
+    with Path(path).open(encoding="utf-8", newline="") as stream:
+        return list(csv.DictReader(stream))
 
 
-def _ensure_case(
-    rows_by_case: dict[tuple[str, int], dict[str, str]],
-    source_row: dict[str, str],
-) -> dict[str, str]:
-    key = (source_row["instance"], int(source_row["p"]))
-    if key not in rows_by_case:
-        rows_by_case[key] = {
-            "instance": source_row["instance"],
-            "n": source_row["n"],
-            "p": source_row["p"],
-            "alpha": source_row["alpha"],
-            "exact_status": "",
-        }
-    elif not rows_by_case[key].get("n") and source_row.get("n"):
-        rows_by_case[key]["n"] = source_row["n"]
-    return rows_by_case[key]
+def save_benchmark_comparison_plots(comparison_csv: str | Path, output_directory: str | Path) -> list[Path]:
+    from ring_star.experiment_plots import plot_legacy_comparison
+    return plot_legacy_comparison(_read_csv_rows(comparison_csv), Path(output_directory))
 
 
-def _optional_float(value: str | None) -> float | None:
-    if value in (None, ""):
-        return None
-    return float(value)
+def save_solution_plots_from_benchmark_csv(
+    benchmark_csv: str | Path, instances_directory: str | Path, output_directory: str | Path,
+    *, tsp_exact_cycle_limit: int = 18,
+) -> list[Path]:
+    """Plot the saved cycle, never a reconstructed or re-optimized surrogate.
 
-
-def _rows_by_instance(rows: list[dict[str, str]]) -> dict[str, list[dict[str, str]]]:
-    grouped: dict[str, list[dict[str, str]]] = {}
-    for row in rows:
-        grouped.setdefault(row["instance"], []).append(row)
-    return {
-        instance: sorted(instance_rows, key=lambda row: int(row["p"]))
-        for instance, instance_rows in sorted(
-            grouped.items(),
-            key=lambda item: (int(item[1][0]["n"] or 0), item[0]),
-        )
-    }
-
-
-def _plot_cost_by_p(rows: list[dict[str, str]], output_path: Path, plt) -> Path:
-    methods = (
-        ("greedy", "Gloutonne", "#2563eb"),
-        ("local_search", "Recherche locale", "#16a34a"),
-        ("tabu_search", "Recherche tabou", "#dc2626"),
-        ("exact_plne", "PLNE exact", "#7c3aed"),
-    )
-    grouped = _rows_by_instance(rows)
-    fig, axes = plt.subplots(2, 4, figsize=(18, 8.5), sharex=False, sharey=False)
-    for ax, (instance, instance_rows) in zip(axes.flat, grouped.items()):
-        ps = [int(row["p"]) for row in instance_rows]
-        for method, label, color in methods:
-            values = [_optional_float(row.get(f"{method}_cost")) for row in instance_rows]
-            plotted = [(p, value) for p, value in zip(ps, values) if value is not None]
-            if plotted:
-                ax.plot(
-                    [p for p, _ in plotted],
-                    [value for _, value in plotted],
-                    marker="o",
-                    linewidth=1.7,
-                    markersize=3.8,
-                    label=label,
-                    color=color,
-                )
-        ax.set_title(instance)
-        ax.set_xlabel("Nombre de stations p")
-        ax.set_ylabel("Coût total")
-        ax.grid(True, linestyle="--", linewidth=0.5, alpha=0.35)
-
-    for ax in axes.flat[len(grouped):]:
-        ax.axis("off")
-
-    handles, labels = axes.flat[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="upper center", ncol=4, bbox_to_anchor=(0.5, 0.975))
-    fig.suptitle("Comparaison des coûts totaux par méthode", y=0.93)
-    fig.tight_layout(rect=(0, 0, 1, 0.90))
-    fig.savefig(output_path, dpi=180)
-    plt.close(fig)
-    return output_path
-
-
-def _plot_runtime_by_p(rows: list[dict[str, str]], output_path: Path, plt) -> Path:
-    methods = (
-        ("greedy", "Gloutonne", "#2563eb"),
-        ("local_search", "Recherche locale", "#16a34a"),
-        ("tabu_search", "Recherche tabou", "#dc2626"),
-        ("exact_plne", "PLNE exact", "#7c3aed"),
-    )
-    grouped = _rows_by_instance(rows)
-    fig, axes = plt.subplots(2, 4, figsize=(18, 8.5), sharex=False, sharey=False)
-    for ax, (instance, instance_rows) in zip(axes.flat, grouped.items()):
-        ps = [int(row["p"]) for row in instance_rows]
-        for method, label, color in methods:
-            values = [_optional_float(row.get(f"{method}_time")) for row in instance_rows]
-            plotted = [(p, value) for p, value in zip(ps, values) if value is not None]
-            if plotted:
-                ax.plot(
-                    [p for p, _ in plotted],
-                    [max(value, 1e-4) for _, value in plotted],
-                    marker="o",
-                    linewidth=1.7,
-                    markersize=3.8,
-                    label=label,
-                    color=color,
-                )
-        ax.set_yscale("log")
-        ax.set_title(instance)
-        ax.set_xlabel("Nombre de stations p")
-        ax.set_ylabel("Temps de calcul (s, log)")
-        ax.grid(True, linestyle="--", linewidth=0.5, alpha=0.35)
-
-    for ax in axes.flat[len(grouped):]:
-        ax.axis("off")
-
-    handles, labels = axes.flat[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="upper center", ncol=4, bbox_to_anchor=(0.5, 0.975))
-    fig.suptitle("Comparaison des temps de calcul", y=0.93)
-    fig.tight_layout(rect=(0, 0, 1, 0.90))
-    fig.savefig(output_path, dpi=180)
-    plt.close(fig)
-    return output_path
-
-
-def _plot_gain_by_instance(rows: list[dict[str, str]], output_path: Path, plt) -> Path:
-    labels = []
-    gains = []
-    for row in rows:
-        greedy = _optional_float(row.get("greedy_cost"))
-        local = _optional_float(row.get("local_search_cost"))
-        tabu = _optional_float(row.get("tabu_search_cost"))
-        meta_values = [value for value in (local, tabu) if value is not None]
-        if greedy is None or not meta_values:
+    Older CSVs without a cycle must first be regenerated with the revised code.
+    The deprecated tsp_exact_cycle_limit argument is ignored for compatibility.
+    """
+    from ring_star.visualization import save_solution_png
+    paths = {}
+    for path in Path(instances_directory).glob("*.tsp"):
+        instance = load_tsplib_instance(path)
+        for key in (path.name, path.stem, instance.name):
+            paths[key] = path
+    saved = []
+    for row in _read_csv_rows(benchmark_csv):
+        if row["status"] not in SUCCESS:
             continue
-        labels.append(f"{row['instance']}\np={row['p']}")
-        gains.append((greedy - min(meta_values)) / greedy * 100)
-
-    fig, ax = plt.subplots(figsize=(18, 7))
-    colors = ["#16a34a" if gain >= 0 else "#dc2626" for gain in gains]
-    ax.bar(range(len(gains)), gains, color=colors)
-    ax.set_xticks(range(len(labels)))
-    ax.set_xticklabels(labels, rotation=75, ha="right", fontsize=8)
-    ax.set_ylabel("Gain du meilleur métaheuristique vs glouton (%)")
-    ax.set_title("Amélioration apportée par les métaheuristiques")
-    ax.grid(True, axis="y", linestyle="--", linewidth=0.5, alpha=0.35)
-    fig.tight_layout()
-    fig.savefig(output_path, dpi=180)
-    plt.close(fig)
-    return output_path
-
-
-def _cycle_for_visualization(
-    stations: frozenset[int],
-    distances,
-    required_station: int,
-    *,
-    tsp_exact_cycle_limit: int,
-    use_exact_cycle: bool,
-) -> tuple[int, ...]:
-    if use_exact_cycle and len(stations) <= tsp_exact_cycle_limit:
-        return _exact_station_cycle(stations, distances, required_station)
-    return two_opt_cycle(
-        nearest_neighbor_cycle(stations, distances, required_station),
-        distances,
-    )
-
-
-def _exact_station_cycle(
-    stations: frozenset[int],
-    distances,
-    required_station: int,
-) -> tuple[int, ...]:
-    other_stations = tuple(sorted(stations - {required_station}))
-    if not other_stations:
-        return (required_station,)
-
-    # Held-Karp dynamic programming over the selected stations only.
-    costs: dict[tuple[int, int], tuple[float, int | None]] = {}
-    for index, station in enumerate(other_stations):
-        costs[(1 << index, index)] = (distances[required_station][station], None)
-
-    for mask in range(1, 1 << len(other_stations)):
-        for last_index, last_station in enumerate(other_stations):
-            if not mask & (1 << last_index):
-                continue
-            previous_mask = mask ^ (1 << last_index)
-            if previous_mask == 0:
-                continue
-            best_previous = min(
-                (
-                    (
-                        costs[(previous_mask, previous_index)][0]
-                        + distances[other_stations[previous_index]][last_station],
-                        previous_index,
-                    )
-                    for previous_index in range(len(other_stations))
-                    if previous_mask & (1 << previous_index)
-                ),
-                key=lambda item: (item[0], other_stations[item[1]]),
-            )
-            costs[(mask, last_index)] = best_previous
-
-    full_mask = (1 << len(other_stations)) - 1
-    best_total, last_index = min(
-        (
-            (
-                costs[(full_mask, index)][0]
-                + distances[other_stations[index]][required_station],
-                index,
-            )
-            for index in range(len(other_stations))
-        ),
-        key=lambda item: (item[0], other_stations[item[1]]),
-    )
-    _ = best_total
-
-    reversed_cycle = []
-    mask = full_mask
-    current_index: int | None = last_index
-    while current_index is not None:
-        reversed_cycle.append(other_stations[current_index])
-        _, previous_index = costs[(mask, current_index)]
-        mask ^= 1 << current_index
-        current_index = previous_index
-
-    return (required_station, *reversed(reversed_cycle))
-
-
-def _method_label(method: str) -> str:
-    return {
-        "greedy": "Heuristique gloutonne",
-        "local_search": "Recherche locale",
-        "tabu_search": "Recherche tabou",
-        "exact_plne": "PLNE exact",
-    }.get(method, method)
+        if not row.get("cycle") or not row.get("assignments"):
+            raise ValueError("CSV has no saved cycle/assignments. Regenerate this benchmark before plotting.")
+        if row["instance"] not in paths:
+            raise ValueError(f"Missing instance: {row['instance']}.")
+        instance = load_tsplib_instance(paths[row["instance"]])
+        problem = RingStarProblem(instance, int(row["p"]), float(row["alpha"]))
+        solution = RingStarSolution(*(tuple(int(x)-1 for x in row[key].split()) for key in ("stations", "cycle", "assignments")))
+        validate_solution(problem, solution)
+        value = solution.costs(build_distance_matrix(instance.points), problem.alpha).total
+        if abs(value - float(row["total_cost"])) > 1e-7 * max(1., abs(value)):
+            raise ValueError("CSV cost differs from the saved solution.")
+        from ring_star.artifacts import slug
+        name = f"{slug(instance.name)}_p{problem.p}_a{problem.alpha:g}_{row['method']}_seed{row.get('seed', '0')}.png"
+        path = Path(output_directory) / row["method"] / name
+        saved.append(save_solution_png(instance, solution, path, problem=problem, status=row["status"]))
+    return saved

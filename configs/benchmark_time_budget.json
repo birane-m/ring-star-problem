@@ -1,0 +1,13 @@
+{
+  "name": "equal_search_time_budget",
+  "instances": ["../data/instances/att48.tsp", "../data/instances/kroA100.tsp"],
+  "p_values": [5, 10, 20],
+  "alphas": [1.0],
+  "seeds": [0, 1, 2, 3, 4],
+  "methods": ["greedy", "local_search", "tabu_search"],
+  "local_iterations": 10000000,
+  "tabu_iterations": 10000000,
+  "search_time_limit": 1.0,
+  "tabu_tenure": 20,
+  "candidates_per_iteration": 20
+}

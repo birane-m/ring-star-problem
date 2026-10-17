@@ -1,2 +1,2 @@
-matplotlib>=3.8
-pulp>=3.3,<4.0
+# Les dépendances sont définies dans pyproject.toml.
+-e .

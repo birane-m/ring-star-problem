@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from math import isfinite
 
 from ring_star.instance import Point, RingStarInstance
 
@@ -57,6 +58,8 @@ def load_tsplib_instance(path: str | Path) -> RingStarInstance:
             f"Expected {dimension} coordinates, found {len(coordinates)}."
         )
 
+    if sorted(coordinates) != list(range(1, len(coordinates) + 1)):
+        raise TsplibFormatError("Supported TSPLIB node ids must be exactly 1..n.")
     points = tuple(point for _, point in sorted(coordinates.items()))
     name = headers.get("NAME") or path.stem
     edge_weight_type = headers.get("EDGE_WEIGHT_TYPE")
@@ -93,6 +96,8 @@ def _parse_coordinate_line(line: str) -> tuple[int, Point]:
     except ValueError as error:
         raise TsplibFormatError(f"Invalid coordinate line: {line!r}.") from error
 
+    if node_id <= 0 or not isfinite(x) or not isfinite(y):
+        raise TsplibFormatError("Node ids must be positive and coordinates finite.")
     return node_id, (x, y)
 
 

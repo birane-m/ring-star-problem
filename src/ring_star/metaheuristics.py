@@ -1,31 +1,14 @@
-"""Metaheuristics for improving Ring-Star solutions.
-
-The constructive greedy heuristic gives a fast feasible solution, but it fixes
-the station set after one pass. This module improves such a solution with a
-simple stochastic local search and a tabu search.
-
-Neighborhood:
-
-* remove one selected station, except the required station;
-* add one non-station point;
-* rebuild assignments and the station cycle;
-* keep the move only if the total objective value decreases.
-
-Both searches are stochastic because candidate swaps are sampled randomly, but
-they are reproducible through an explicit random seed.
-"""
-
+"""Seeded station-swap descent and tabu search with measurable work budgets."""
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 from random import Random
+from time import perf_counter
 
 from ring_star.distances import DistanceMatrix, build_distance_matrix
 from ring_star.heuristics import (
-    assign_to_nearest_station,
-    build_greedy_solution,
-    nearest_neighbor_cycle,
-    two_opt_cycle,
+    assign_to_nearest_station, build_greedy_solution, nearest_neighbor_cycle, two_opt_cycle,
 )
 from ring_star.instance import RingStarProblem
 from ring_star.solution import RingStarSolution
@@ -33,21 +16,30 @@ from ring_star.validation import validate_solution
 
 
 @dataclass(frozen=True)
-class LocalSearchResult:
-    """Summary of a stochastic local search run."""
+class SearchStep:
+    iteration: int
+    evaluations: int
+    elapsed_seconds: float
+    current_cost: float
+    best_cost: float
 
+
+@dataclass(frozen=True)
+class LocalSearchResult:
     initial_solution: RingStarSolution
     best_solution: RingStarSolution
     iterations: int
     accepted_moves: int
     initial_cost: float
     best_cost: float
+    evaluated_moves: int = 0
+    iteration_budget: int = 0
+    stop_reason: str = "iteration_budget"
+    history: tuple[SearchStep, ...] = ()
 
 
 @dataclass(frozen=True)
 class TabuSearchResult:
-    """Summary of a tabu search run."""
-
     initial_solution: RingStarSolution
     best_solution: RingStarSolution
     iterations: int
@@ -56,306 +48,186 @@ class TabuSearchResult:
     best_cost: float
     tabu_tenure: int
     candidates_per_iteration: int
+    evaluated_moves: int = 0
+    iteration_budget: int = 0
+    stop_reason: str = "iteration_budget"
+    history: tuple[SearchStep, ...] = ()
 
 
-def improve_with_station_swaps(
-    problem: RingStarProblem,
-    initial_solution: RingStarSolution,
-    distances: DistanceMatrix,
-    iterations: int,
-    seed: int = 0,
-) -> LocalSearchResult:
-    """Improve a solution by stochastic station/non-station swaps.
-
-    The method is a descent heuristic: worsening moves are rejected. This keeps
-    the algorithm easy to explain and guarantees that the returned solution is
-    never worse than the initial one for the same cost function.
-    """
-
-    if iterations < 0:
-        raise ValueError("Number of iterations must be non-negative.")
-
-    validate_solution(problem, initial_solution)
-
-    random = Random(seed)
-    current_solution = initial_solution
-    current_cost = initial_solution.costs(distances, problem.alpha).total
-    best_solution = initial_solution
-    best_cost = current_cost
-    accepted_moves = 0
-
-    for _ in range(iterations):
-        station_to_remove = _sample_removable_station(
-            current_solution,
-            problem,
-            random,
-        )
-        point_to_add = _sample_non_station(
-            current_solution,
-            problem,
-            random,
-        )
-        if station_to_remove is None or point_to_add is None:
-            break
-
-        candidate_stations = set(current_solution.stations)
-        candidate_stations.remove(station_to_remove)
-        candidate_stations.add(point_to_add)
-        candidate_solution = build_solution_from_stations(
-            problem,
-            distances,
-            frozenset(candidate_stations),
-        )
-        candidate_cost = candidate_solution.costs(distances, problem.alpha).total
-
-        if candidate_cost < current_cost:
-            current_solution = candidate_solution
-            current_cost = candidate_cost
-            accepted_moves += 1
-
-            if candidate_cost < best_cost:
-                best_solution = candidate_solution
-                best_cost = candidate_cost
-
-    return LocalSearchResult(
-        initial_solution=initial_solution,
-        best_solution=best_solution,
-        iterations=iterations,
-        accepted_moves=accepted_moves,
-        initial_cost=initial_solution.costs(distances, problem.alpha).total,
-        best_cost=best_cost,
-    )
+def _integer(value: int, name: str, minimum: int = 0) -> None:
+    if type(value) is not int or value < minimum:
+        raise ValueError(f"{name} must be an integer >= {minimum}.")
 
 
-def build_local_search_solution(
-    problem: RingStarProblem,
-    iterations: int | None = None,
-    seed: int = 0,
-) -> LocalSearchResult:
-    """Build a greedy solution and improve it with station swaps."""
-
-    distances = build_distance_matrix(problem.instance.points)
-    initial_solution = build_greedy_solution(problem)
-    iteration_budget = iterations if iterations is not None else max(500, 10 * problem.instance.n)
-    return improve_with_station_swaps(
-        problem,
-        initial_solution,
-        distances,
-        iterations=iteration_budget,
-        seed=seed,
-    )
-
-
-def improve_with_tabu_search(
-    problem: RingStarProblem,
-    initial_solution: RingStarSolution,
-    distances: DistanceMatrix,
-    iterations: int,
-    seed: int = 0,
-    tabu_tenure: int = 20,
-    candidates_per_iteration: int | None = None,
-) -> TabuSearchResult:
-    """Improve a solution with a stochastic tabu search.
-
-    Tabu search uses the same swap neighborhood as the descent heuristic, but it
-    may accept a worse current solution to escape local optima. Recently removed
-    stations are marked tabu, meaning they cannot be immediately re-added unless
-    the move improves the best solution found so far.
-    """
-
-    if iterations < 0:
-        raise ValueError("Number of iterations must be non-negative.")
-    if tabu_tenure < 0:
-        raise ValueError("Tabu tenure must be non-negative.")
-
-    validate_solution(problem, initial_solution)
-
-    random = Random(seed)
-    current_solution = initial_solution
-    current_cost = initial_solution.costs(distances, problem.alpha).total
-    best_solution = initial_solution
-    best_cost = current_cost
-    tabu_until: dict[int, int] = {}
-    performed_moves = 0
-    sampled_candidates = candidates_per_iteration or max(20, problem.instance.n)
-
-    if sampled_candidates <= 0:
-        raise ValueError("Candidates per iteration must be positive.")
-
-    for iteration in range(iterations):
-        candidate = _best_admissible_sampled_swap(
-            problem,
-            current_solution,
-            distances,
-            random,
-            sampled_candidates,
-            tabu_until,
-            iteration,
-            best_cost,
-        )
-        if candidate is None:
-            continue
-
-        station_to_remove, point_to_add, candidate_solution, candidate_cost = candidate
-        current_solution = candidate_solution
-        current_cost = candidate_cost
-        performed_moves += 1
-
-        # Forbid immediately undoing the move by re-adding the removed station.
-        tabu_until[station_to_remove] = iteration + tabu_tenure
-
-        if current_cost < best_cost:
-            best_solution = current_solution
-            best_cost = current_cost
-
-    return TabuSearchResult(
-        initial_solution=initial_solution,
-        best_solution=best_solution,
-        iterations=iterations,
-        performed_moves=performed_moves,
-        initial_cost=initial_solution.costs(distances, problem.alpha).total,
-        best_cost=best_cost,
-        tabu_tenure=tabu_tenure,
-        candidates_per_iteration=sampled_candidates,
-    )
-
-
-def build_tabu_search_solution(
-    problem: RingStarProblem,
-    iterations: int | None = None,
-    seed: int = 0,
-    tabu_tenure: int = 20,
-    candidates_per_iteration: int | None = None,
-) -> TabuSearchResult:
-    """Build a greedy solution and improve it with tabu search."""
-
-    distances = build_distance_matrix(problem.instance.points)
-    initial_solution = build_greedy_solution(problem)
-    iteration_budget = iterations if iterations is not None else max(500, 10 * problem.instance.n)
-    return improve_with_tabu_search(
-        problem,
-        initial_solution,
-        distances,
-        iterations=iteration_budget,
-        seed=seed,
-        tabu_tenure=tabu_tenure,
-        candidates_per_iteration=candidates_per_iteration,
-    )
+def _budget(iterations: int, seed: int, time_limit: float | None) -> None:
+    _integer(iterations, "iterations")
+    if type(seed) is not int:
+        raise ValueError("seed must be an integer.")
+    if time_limit is not None and (
+        isinstance(time_limit, bool) or not isfinite(time_limit) or time_limit <= 0
+    ):
+        raise ValueError("Search time limit must be finite and strictly positive.")
 
 
 def build_solution_from_stations(
-    problem: RingStarProblem,
-    distances: DistanceMatrix,
-    stations: frozenset[int],
+    problem: RingStarProblem, distances: DistanceMatrix, stations: frozenset[int],
 ) -> RingStarSolution:
-    """Rebuild assignments and the 2-opt-improved cycle for a station set."""
-
-    assignments = assign_to_nearest_station(stations, distances)
-    cycle = two_opt_cycle(
-        nearest_neighbor_cycle(stations, distances, problem.required_station),
-        distances,
-    )
     solution = RingStarSolution(
-        stations=stations,
-        cycle=cycle,
-        assignments=assignments,
+        stations,
+        two_opt_cycle(nearest_neighbor_cycle(stations, distances, problem.required_station), distances),
+        assign_to_nearest_station(stations, distances),
     )
     validate_solution(problem, solution)
     return solution
 
 
-def _sample_removable_station(
-    solution: RingStarSolution,
-    problem: RingStarProblem,
-    random: Random,
-) -> int | None:
-    removable = sorted(
-        station
-        for station in solution.stations
-        if station != problem.required_station
-    )
-    if not removable:
-        return None
-    return random.choice(removable)
+def improve_with_station_swaps(
+    problem: RingStarProblem, initial_solution: RingStarSolution,
+    distances: DistanceMatrix, iterations: int, seed: int = 0,
+    *, time_limit: float | None = None,
+) -> LocalSearchResult:
+    """Sample one swap per iteration; accept only strict improvements.
 
-
-def _sample_non_station(
-    solution: RingStarSolution,
-    problem: RingStarProblem,
-    random: Random,
-) -> int | None:
-    non_stations = [
-        point
-        for point in range(problem.instance.n)
-        if point not in solution.stations
-    ]
-    if not non_stations:
-        return None
-    return random.choice(non_stations)
-
-
-def _best_admissible_sampled_swap(
-    problem: RingStarProblem,
-    solution: RingStarSolution,
-    distances: DistanceMatrix,
-    random: Random,
-    candidates_per_iteration: int,
-    tabu_until: dict[int, int],
-    iteration: int,
-    best_cost: float,
-) -> tuple[int, int, RingStarSolution, float] | None:
-    removable = sorted(
-        station
-        for station in solution.stations
-        if station != problem.required_station
-    )
-    non_stations = [
-        point
-        for point in range(problem.instance.n)
-        if point not in solution.stations
-    ]
-    if not removable or not non_stations:
-        return None
-
-    max_candidates = len(removable) * len(non_stations)
-    sample_size = min(candidates_per_iteration, max_candidates)
-    sampled_swaps = _sample_unique_swaps(removable, non_stations, sample_size, random)
-    best_candidate: tuple[int, int, RingStarSolution, float] | None = None
-
-    for station_to_remove, point_to_add in sampled_swaps:
-        candidate_stations = set(solution.stations)
-        candidate_stations.remove(station_to_remove)
-        candidate_stations.add(point_to_add)
-        candidate_solution = build_solution_from_stations(
-            problem,
-            distances,
-            frozenset(candidate_stations),
+    A sampled descent does not certify a local optimum over the full neighborhood.
+    The time budget concerns the improvement phase, not parsing or plotting.
+    """
+    _budget(iterations, seed, time_limit)
+    validate_solution(problem, initial_solution)
+    rng = Random(seed)
+    current = initial_solution
+    initial_cost = current.costs(distances, problem.alpha).total
+    current_cost = initial_cost
+    start = perf_counter()
+    history = [SearchStep(0, 0, 0.0, current_cost, current_cost)]
+    done = accepted = 0
+    reason = "iteration_budget"
+    for _ in range(iterations):
+        if time_limit is not None and perf_counter() - start >= time_limit:
+            reason = "time_budget"
+            break
+        removable = sorted(current.stations - {problem.required_station})
+        non_stations = sorted(set(range(problem.instance.n)) - current.stations)
+        if not removable or not non_stations:
+            reason = "empty_neighborhood"
+            break
+        remove, add = rng.choice(removable), rng.choice(non_stations)
+        candidate = build_solution_from_stations(
+            problem, distances, (current.stations - {remove}) | {add},
         )
-        candidate_cost = candidate_solution.costs(distances, problem.alpha).total
-
-        is_tabu = iteration < tabu_until.get(point_to_add, -1)
-        aspiration = candidate_cost < best_cost
-        if is_tabu and not aspiration:
-            continue
-
-        if best_candidate is None or candidate_cost < best_candidate[3]:
-            best_candidate = (
-                station_to_remove,
-                point_to_add,
-                candidate_solution,
-                candidate_cost,
-            )
-
-    return best_candidate
+        value = candidate.costs(distances, problem.alpha).total
+        done += 1
+        if value < current_cost - 1e-10:
+            current, current_cost = candidate, value
+            accepted += 1
+        history.append(SearchStep(done, done, perf_counter() - start, current_cost, current_cost))
+    return LocalSearchResult(
+        initial_solution, current, done, accepted, initial_cost, current_cost,
+        done, iterations, reason, tuple(history),
+    )
 
 
 def _sample_unique_swaps(
-    removable: list[int],
-    non_stations: list[int],
-    sample_size: int,
-    random: Random,
+    removable: list[int], non_stations: list[int], sample_size: int, random: Random,
 ) -> list[tuple[int, int]]:
-    swaps: set[tuple[int, int]] = set()
-    while len(swaps) < sample_size:
-        swaps.add((random.choice(removable), random.choice(non_stations)))
-    return list(swaps)
+    """Sample without replacement, with stable ordering and no rejection loop."""
+    width = len(non_stations)
+    return [
+        (removable[index // width], non_stations[index % width])
+        for index in random.sample(range(len(removable) * width), sample_size)
+    ]
+
+
+def improve_with_tabu_search(
+    problem: RingStarProblem, initial_solution: RingStarSolution,
+    distances: DistanceMatrix, iterations: int, seed: int = 0,
+    tabu_tenure: int = 20, candidates_per_iteration: int | None = None,
+    *, time_limit: float | None = None,
+) -> TabuSearchResult:
+    """Allow worsening moves; forbid re-adding removed stations for tenure steps.
+
+    Aspiration allows a tabu move if it strictly improves the global best.
+    The best solution is kept separately from the current solution.
+    """
+    _budget(iterations, seed, time_limit)
+    _integer(tabu_tenure, "tabu_tenure")
+    candidates = max(20, problem.instance.n) if candidates_per_iteration is None else candidates_per_iteration
+    _integer(candidates, "candidates_per_iteration", 1)
+    validate_solution(problem, initial_solution)
+    rng = Random(seed)
+    current = best = initial_solution
+    current_cost = best_cost = initial_cost = current.costs(distances, problem.alpha).total
+    tabu_until: dict[int, int] = {}
+    start = perf_counter()
+    history = [SearchStep(0, 0, 0.0, current_cost, best_cost)]
+    done = performed = evaluated = 0
+    reason = "iteration_budget"
+    for iteration in range(iterations):
+        if time_limit is not None and perf_counter() - start >= time_limit:
+            reason = "time_budget"
+            break
+        removable = sorted(current.stations - {problem.required_station})
+        non_stations = sorted(set(range(problem.instance.n)) - current.stations)
+        if not removable or not non_stations:
+            reason = "empty_neighborhood"
+            break
+        swaps = _sample_unique_swaps(
+            removable, non_stations, min(candidates, len(removable) * len(non_stations)), rng,
+        )
+        chosen = None
+        for remove, add in swaps:
+            if time_limit is not None and perf_counter() - start >= time_limit:
+                reason = "time_budget"
+                break
+            solution = build_solution_from_stations(
+                problem, distances, (current.stations - {remove}) | {add},
+            )
+            value = solution.costs(distances, problem.alpha).total
+            evaluated += 1
+            if iteration < tabu_until.get(add, -1) and value >= best_cost - 1e-10:
+                continue
+            if chosen is None or value < chosen[3] - 1e-10:
+                chosen = (remove, add, solution, value)
+        done += 1
+        if chosen is not None:
+            remove, _, current, current_cost = chosen
+            performed += 1
+            # A tenure of one blocks re-entry on the next iteration.
+            tabu_until[remove] = iteration + tabu_tenure + 1
+            if current_cost < best_cost - 1e-10:
+                best, best_cost = current, current_cost
+        history.append(SearchStep(done, evaluated, perf_counter() - start, current_cost, best_cost))
+        if reason == "time_budget":
+            break
+    return TabuSearchResult(
+        initial_solution, best, done, performed, initial_cost, best_cost,
+        tabu_tenure, candidates, evaluated, iterations, reason, tuple(history),
+    )
+
+
+def build_local_search_solution(
+    problem: RingStarProblem, iterations: int | None = None, seed: int = 0,
+    *, distances: DistanceMatrix | None = None, time_limit: float | None = None,
+) -> LocalSearchResult:
+    if distances is None:
+        distances = build_distance_matrix(problem.instance.points)
+    initial = build_greedy_solution(problem, distances=distances)
+    return improve_with_station_swaps(
+        problem, initial, distances,
+        iterations if iterations is not None else max(500, 10 * problem.instance.n),
+        seed, time_limit=time_limit,
+    )
+
+
+def build_tabu_search_solution(
+    problem: RingStarProblem, iterations: int | None = None, seed: int = 0,
+    tabu_tenure: int = 20, candidates_per_iteration: int | None = None,
+    *, distances: DistanceMatrix | None = None, time_limit: float | None = None,
+) -> TabuSearchResult:
+    if distances is None:
+        distances = build_distance_matrix(problem.instance.points)
+    initial = build_greedy_solution(problem, distances=distances)
+    return improve_with_tabu_search(
+        problem, initial, distances,
+        iterations if iterations is not None else max(500, 10 * problem.instance.n),
+        seed, tabu_tenure, candidates_per_iteration, time_limit=time_limit,
+    )

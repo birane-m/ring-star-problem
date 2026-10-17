@@ -15,9 +15,13 @@ edges.
 from __future__ import annotations
 
 import warnings
+import re
+import tempfile
+from pathlib import Path
+from math import isfinite
 from dataclasses import dataclass
 
-from ring_star.distances import build_distance_matrix
+from ring_star.distances import DistanceMatrix, build_distance_matrix
 from ring_star.instance import RingStarProblem
 from ring_star.solution import RingStarSolution
 from ring_star.validation import validate_solution
@@ -28,7 +32,12 @@ class ExactSolverUnavailableError(ImportError):
 
 
 class ExactSolveError(RuntimeError):
-    """Raised when the exact solver cannot return a feasible optimal solution."""
+    """Raised when no integer feasible solution is available."""
+
+    def __init__(self, message: str, *, status: str = "error", solver_log: str = ""):
+        super().__init__(message)
+        self.status = status
+        self.solver_log = solver_log
 
 
 @dataclass(frozen=True)
@@ -39,15 +48,19 @@ class ExactSolveResult:
     objective_value: float
     status: str
     solver_name: str
-    time_limit: int | None
+    time_limit: float | None
     optimal: bool
+    lower_bound: float | None = None
+    relative_gap: float | None = None
+    solver_log: str = ""
 
 
 def solve_exact_solution(
     problem: RingStarProblem,
     *,
-    time_limit: int | None = None,
+    time_limit: float | None = None,
     solver_message: bool = False,
+    distances: DistanceMatrix | None = None,
 ) -> ExactSolveResult:
     """Solve the Ring-Star problem exactly with a PLNE model.
 
@@ -55,8 +68,11 @@ def solve_exact_solution(
     the project remains usable without an exact solver installed.
     """
 
+    if time_limit is not None and (isinstance(time_limit, bool) or not isfinite(time_limit) or time_limit <= 0):
+        raise ValueError("Exact time limit must be finite and strictly positive, or None.")
     pulp = _import_pulp()
-    distances = build_distance_matrix(problem.instance.points)
+    if distances is None:
+        distances = build_distance_matrix(problem.instance.points)
     model = pulp.LpProblem("ring_star", pulp.LpMinimize)
     n = problem.instance.n
     root = problem.required_station
@@ -123,11 +139,28 @@ def solve_exact_solution(
         else:
             model += incoming - outgoing == station[i]
 
-    solver, solver_name = _build_cbc_solver(pulp, time_limit, solver_message)
-    model.solve(solver)
-    raw_status = pulp.LpStatus[model.status]
-    if raw_status != "Optimal":
-        raise ExactSolveError(f"Exact solver did not return a feasible solution: {raw_status}.")
+    with tempfile.TemporaryDirectory(prefix="ring-star-cbc-") as directory:
+        log_path = Path(directory) / "cbc.log"
+        solver, solver_name = _build_cbc_solver(pulp, time_limit, False, log_path)
+        try:
+            model.solve(solver)
+        except pulp.PulpSolverError as error:
+            log = log_path.read_text(errors="replace") if log_path.exists() else ""
+            raise ExactSolveError(str(error), solver_log=log) from error
+        log = log_path.read_text(errors="replace") if log_path.exists() else ""
+    if solver_message:
+        print(log)
+    optimal = model.status == pulp.LpStatusOptimal and model.sol_status == pulp.LpSolutionOptimal
+    integer_feasible = model.sol_status in (pulp.LpSolutionOptimal, pulp.LpSolutionIntegerFeasible)
+    if not integer_feasible:
+        status = "no_solution_time_limit" if model.status == pulp.LpStatusNotSolved and time_limit is not None else "no_solution"
+        raise ExactSolveError(
+            f"No integer feasible solution: {pulp.LpStatus[model.status]}.",
+            status=status, solver_log=log,
+        )
+    binaries = [*station.values(), *metro_edge.values(), *(assignment[i][j] for i in points for j in points)]
+    if any(v.value() is None or abs(float(v.value()) - round(float(v.value()))) > 1e-5 for v in binaries):
+        raise ExactSolveError("Solver returned a fractional incumbent.", solver_log=log)
 
     selected_stations = frozenset(
         i for i in points if _variable_value(station[i]) >= 0.5
@@ -147,15 +180,30 @@ def solve_exact_solution(
     )
     validate_solution(problem, solution)
 
-    status = "Optimal" if time_limit is None else "feasible_time_limited"
+    objective = solution.costs(distances, problem.alpha).total
+    lower_bound = objective if optimal else _read_lower_bound(log)
+    if lower_bound is not None and lower_bound > objective + 1e-4:
+        lower_bound = None  # Never export an inconsistent bound from a solver log.
+    gap = None if lower_bound is None else max(0.0, objective - lower_bound) / max(abs(objective), 1e-12)
     return ExactSolveResult(
-        solution=solution,
-        objective_value=float(pulp.value(model.objective)),
-        status=status,
-        solver_name=solver_name,
-        time_limit=time_limit,
-        optimal=time_limit is None,
+        solution=solution, objective_value=objective,
+        status="Optimal" if optimal else "feasible_time_limited" if time_limit is not None else "feasible",
+        solver_name=solver_name, time_limit=time_limit, optimal=optimal,
+        lower_bound=lower_bound, relative_gap=gap, solver_log=log,
     )
+
+
+def _read_lower_bound(log: str) -> float | None:
+    # CBC prints this summary on a time-limited run. Do not infer a bound from
+    # the LP relaxation alone or from the best known heuristic solution.
+    matches = re.findall(r"Lower bound:\s*([-+0-9.eE]+)", log)
+    if not matches:
+        return None
+    try:
+        value = float(matches[-1])
+        return value if isfinite(value) else None
+    except ValueError:
+        return None
 
 
 def _import_pulp():
@@ -170,7 +218,7 @@ def _import_pulp():
     return pulp
 
 
-def _build_cbc_solver(pulp, time_limit: int | None, solver_message: bool):
+def _build_cbc_solver(pulp, time_limit: float | None, solver_message: bool, log_path: Path | None = None):
     for solver_name in ("COIN_CMD", "PULP_CBC_CMD"):
         solver_class = getattr(pulp, solver_name, None)
         if solver_class is None:
@@ -178,11 +226,11 @@ def _build_cbc_solver(pulp, time_limit: int | None, solver_message: bool):
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", DeprecationWarning)
-            solver = solver_class(msg=solver_message, timeLimit=time_limit)
+            solver = solver_class(msg=solver_message, timeLimit=time_limit, logPath=str(log_path) if log_path else None, threads=0, options=["randomSeed 1"])
         try:
             is_available = bool(solver.available())
-        except Exception:
-            is_available = True
+        except (OSError, pulp.PulpSolverError):
+            is_available = False
 
         if is_available:
             return solver, "CBC"

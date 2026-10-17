@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Iterable
+from math import isfinite
+from numbers import Real
 
 Point = tuple[float, float]
 
@@ -12,6 +14,8 @@ def _normalize_points(points: Iterable[Point]) -> tuple[Point, ...]:
     normalized = tuple((float(x), float(y)) for x, y in points)
     if not normalized:
         raise ValueError("An instance must contain at least one point.")
+    if any(not isfinite(value) for point in normalized for value in point):
+        raise ValueError("Coordinates must be finite numbers.")
     return normalized
 
 
@@ -30,7 +34,7 @@ class RingStarInstance:
 
         if not self.name:
             raise ValueError("Instance name cannot be empty.")
-        if not 0 <= self.required_station < len(points):
+        if type(self.required_station) is not int or not 0 <= self.required_station < len(points):
             raise ValueError("Required station index is outside the instance.")
 
     @property
@@ -47,9 +51,9 @@ class RingStarProblem:
     alpha: float = 1.0
 
     def __post_init__(self) -> None:
-        if not 3 <= self.p <= self.instance.n:
+        if type(self.p) is not int or not 3 <= self.p <= self.instance.n:
             raise ValueError("Parameter p must satisfy 3 <= p <= n.")
-        if not 0 <= self.alpha <= 10:
+        if isinstance(self.alpha, bool) or not isinstance(self.alpha, Real) or not isfinite(self.alpha) or not 0 <= self.alpha <= 10:
             raise ValueError("Parameter alpha must satisfy 0 <= alpha <= 10.")
 
     @property

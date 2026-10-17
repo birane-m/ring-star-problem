@@ -156,27 +156,29 @@ def two_opt_cycle(
         return cycle
 
     best = list(cycle)
-    improved = True
-
-    while improved:
-        improved = False
+    while True:
+        changed = False
+        # Reverse [i:j], keeping vertex 0 fixed, including j == len(best).
         for i in range(1, len(best) - 1):
-            for j in range(i + 1, len(best)):
-                if j - i == 1:
-                    continue
-
-                candidate = best[:i] + list(reversed(best[i:j])) + best[j:]
-                if _cycle_length(candidate, distances) < _cycle_length(best, distances):
-                    best = candidate
-                    improved = True
+            for j in range(i + 2, len(best) + 1):
+                a, b = best[i - 1], best[i]
+                c, d = best[j - 1], best[j % len(best)]
+                delta = distances[a][c] + distances[b][d] - distances[a][b] - distances[c][d]
+                scale = max(1.0, distances[a][b] + distances[c][d])
+                if delta < -1e-12 * scale:
+                    best[i:j] = reversed(best[i:j])
+                    changed = True
                     break
-            if improved:
+            if changed:
                 break
+        if not changed:
+            return tuple(best)
 
-    return tuple(best)
 
-
-def build_greedy_solution(problem: RingStarProblem) -> RingStarSolution:
+def build_greedy_solution(
+    problem: RingStarProblem,
+    *, distances: DistanceMatrix | None = None,
+) -> RingStarSolution:
     """Build a valid Ring-Star solution with the constructive heuristic.
 
     Pipeline:
@@ -189,7 +191,8 @@ def build_greedy_solution(problem: RingStarProblem) -> RingStarSolution:
     6. validate the resulting Ring-Star solution.
     """
 
-    distances = build_distance_matrix(problem.instance.points)
+    if distances is None:
+        distances = build_distance_matrix(problem.instance.points)
     stations = select_stations_grid_then_complete(problem, distances)
     assignments = assign_to_nearest_station(stations, distances)
     cycle = two_opt_cycle(

@@ -24,14 +24,14 @@ def validate_solution(problem: RingStarProblem, solution: RingStarSolution) -> N
         raise SolutionValidationError("The required station is missing.")
 
     for station in solution.stations:
-        if not 0 <= station < n:
+        if type(station) is not int or not 0 <= station < n:
             raise SolutionValidationError("A station index is outside the instance.")
 
     if len(solution.assignments) != n:
         raise SolutionValidationError("Each point must have exactly one assignment.")
 
     for point, station in enumerate(solution.assignments):
-        if not 0 <= station < n:
+        if type(station) is not int or not 0 <= station < n:
             raise SolutionValidationError("An assignment points outside the instance.")
         if station not in solution.stations:
             raise SolutionValidationError("An assignment points to a non-station.")
@@ -40,6 +40,9 @@ def validate_solution(problem: RingStarProblem, solution: RingStarSolution) -> N
 
     if len(solution.cycle) != p:
         raise SolutionValidationError("The cycle must contain exactly p stations.")
+
+    if any(type(station) is not int for station in solution.cycle):
+        raise SolutionValidationError("Cycle indices must be integers.")
 
     if len(set(solution.cycle)) != len(solution.cycle):
         raise SolutionValidationError("The cycle must be simple.")

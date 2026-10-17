@@ -1,0 +1,20 @@
+{
+  "name": "demo_multi_graines",
+  "instances": [
+    "../data/instances/ulysses16.tsp", "../data/instances/ulysses22.tsp",
+    "../data/instances/att48.tsp", "../data/instances/eil51.tsp",
+    "../data/instances/berlin52.tsp", "../data/instances/st70.tsp",
+    "../data/instances/kroA100.tsp", "../data/instances/rd100.tsp"
+  ],
+  "p_values": [3, 5, 10],
+  "alphas": [1.0],
+  "seeds": [0, 1, 2],
+  "methods": ["greedy", "local_search", "tabu_search", "exact_plne"],
+  "local_iterations": 100,
+  "tabu_iterations": 100,
+  "tabu_tenure": 10,
+  "candidates_per_iteration": 15,
+  "exact_time_limit": 5,
+  "exact_max_n": 22,
+  "exact_max_p": 5
+}

@@ -293,9 +293,10 @@ class CliTests(unittest.TestCase):
             finally:
                 os.chdir(previous_cwd)
 
-            json_path = directory_path / "outputs/results/heuristics/tiny_greedy_p3.json"
-            markdown_path = json_path.with_suffix(".md")
-            plot_path = directory_path / "outputs/figures/heuristics/tiny_greedy_p3.png"
+            run_folder, = (directory_path / "outputs/runs").iterdir()
+            json_path = run_folder / "solution.json"
+            markdown_path = run_folder / "summary.md"
+            plot_path = run_folder / "figures/solution.png"
             data = json.loads(json_path.read_text(encoding="utf-8"))
             self.assertEqual(exit_code, 0)
             self.assertEqual(data["method"], "greedy")
@@ -568,6 +569,9 @@ class CliTests(unittest.TestCase):
                     [
                         "benchmark",
                         str(tsp_path),
+                        "--output-root",
+                        str(Path(directory) / "outputs"),
+                        "--no-plots",
                         "--methods",
                         "greedy",
                         "local_search",
