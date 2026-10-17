@@ -1,0 +1,24 @@
+--- a/src/ring_star/experiments.py
++++ b/src/ring_star/experiments.py
+@@ -155,6 +155,8 @@
+                     records.append(record_from_run(problem, result, relative))
+                     saved_runs.append((problem, result, run_folder, source))
+                     save_benchmark_csv(records, folder / "runs.csv")
++        # Flush terminal skipped cases as well as solved runs.
++        save_benchmark_csv(records, folder / "runs.csv")
+         rows = summarize_records(records)
+         save_summary_csv(rows, folder / "summary.csv")
+         if make_plots:
+--- a/tests/test_experiments.py
++++ b/tests/test_experiments.py
+@@ -106,6 +106,10 @@
+             self.assertEqual(row["mean_cost"],"")
+             self.assertEqual(row["successful_runs"],"0")
+             self.assertIn("skipped",row["statuses"])
++            raw=read_rows(folder/"runs.csv")
++            self.assertEqual(len(raw),1)
++            self.assertEqual(raw[0]["status"],"skipped")
++            self.assertEqual(json.loads((folder/"completion.json").read_text())["runs"],len(raw))
+ 
+     def test_unknown_config_and_invalid_p_fail_before_running(self):
+         with tempfile.TemporaryDirectory() as tmp:

@@ -1,0 +1,128 @@
+\chapter{Comparaison des méthodes sur la campagne}
+\section{Bilan des exécutions et des garanties}
+Les 168 exécutions des trois méthodes approchées fournissent une solution
+réalisable. La PLNE est tentée sur quatre cas : \code{ulysses16} et
+\code{ulysses22}, avec $p=3$ et $p=5$. Les 20 autres cas sont ignorés selon
+les seuils configurés. Le tableau~\ref{tab:exacts} présente toutes les
+résolutions exactes effectivement lancées.
+
+\begin{table}[htbp]\centering
+{\small\setlength{\tabcolsep}{3.5pt}\input{tableaux/resultats_exacts}}
+\caption{Solutions PLNE, bornes et statut de preuve, sous une limite CBC de cinq secondes.}
+\label{tab:exacts}
+\sourcecalcul{solutions JSON et journaux CBC enregistrés. L'écart$^*$ est
+$100(C-B)/|C|$, avec la borne issue du journal ; les valeurs sont arrondies pour l'affichage.}
+\end{table}
+
+Les deux cas à trois stations sont résolus avec une preuve. Sur
+\code{ulysses16} à cinq stations, CBC prouve également l'optimalité de la
+valeur 65,3775. Sur \code{ulysses22} à cinq stations, il fournit une solution
+de coût 71,5707, mais sa borne inférieure reste à 66,378 environ.
+L'écart sauvegardé vaut 7,26\,\% selon la convention du projet. L'égalité
+éventuelle d'une heuristique avec 71,5707 ne permet donc pas d'annoncer
+un optimum sur ce cas.
+
+Les seuils de taille ont un effet méthodologique : le rapport ne mesure pas
+la capacité de CBC à résoudre les six grandes instances. Il ne peut donc
+conclure que ces instances seraient insolubles par PLNE. Il constate seulement
+qu'elles n'ont pas été lancées dans cette campagne de démonstration.
+
+\section{Gains face à la construction}
+Les deux recherches améliorent le coût moyen de la construction dans chacun
+des 24 cas. Le tableau~\ref{tab:gains} résume les gains par cas, puis la
+figure~\ref{fig:gains} permet d'en lire les différences selon l'instance et $p$.
+\begin{table}[htbp]\centering
+\input{tableaux/gains_synthese}
+\caption{Distribution descriptive des 24 gains moyens face à la construction, à $\alpha=1$.}
+\label{tab:gains}\sourcetable
+\end{table}
+
+Les gains varient fortement : une construction déjà proche d'une bonne
+sélection laisse peu de marge, alors qu'une sélection initiale mal adaptée
+peut être beaucoup améliorée. Cette amplitude rappelle que la qualité de la
+référence influence le gain relatif. Un grand pourcentage ne suffit pas à
+qualifier une méthode de performante face à toutes les références possibles.
+
+La moyenne tabou est meilleure que la moyenne locale dans 22 cas, et identique
+à la précision considérée dans deux cas. Aucune moyenne locale ne bat la
+moyenne tabou dans ce protocole. Cela décrit les réglages testés : 100
+évaluations par recherche locale et 1\,500 par recherche tabou. Le résultat
+ne sépare pas l'avantage de la mémoire tabou de celui d'un échantillon plus
+large et d'un plus grand nombre de reconstructions du cycle.
+
+\figureRS[0.93]{gains_campagne.pdf}{Gains moyens des recherches face à la construction.
+Chaque case compare une instance et une valeur de $p$, avec $\alpha=1$.}
+{fig:gains}
+\FloatBarrier
+
+\section{Un cas avec optimum prouvé : Ulysses16, cinq stations}
+Le tableau~\ref{tab:u16} donne une comparaison où le coût optimal est connu
+dans la métrique retenue par le projet. La construction vaut 89,1917.
+La recherche locale atteint une moyenne de 65,5512 avec un écart-type de
+0,1505. La recherche tabou atteint 65,3775 sur chacune des trois graines,
+valeur égale à l'optimum prouvé par CBC.
+\begin{table}[htbp]\centering
+{\small\setlength{\tabcolsep}{4pt}\input{tableaux/ulysses16_p5}}
+\caption{Ulysses16, $p=5$, $\alpha=1$ : coût, dispersion et écart à l'optimum prouvé.}
+\label{tab:u16}\sourcetable
+\end{table}
+
+La dispersion nulle du tabou signifie seulement que les trois coûts observés
+coïncident. Elle ne prouve pas qu'une autre graine ou un autre problème aurait
+le même comportement. Ici, l'égalité de coût avec une valeur certifiée permet
+cependant de conclure que les solutions tabou observées sont optimales pour
+ce cas, sous les tolérances numériques de comparaison.
+
+L'écart à l'optimum est renseigné uniquement sur les trois cas certifiés du
+tableau~\ref{tab:gap}. Les autres cases de l'étude ne reçoivent pas d'écart
+à un optimum non établi.
+\begin{table}[htbp]\centering
+\input{tableaux/ecarts_optimum}
+\caption{Écarts de coût moyen aux optima prouvés disponibles.}
+\label{tab:gap}\sourcetable
+\end{table}
+
+\section{Qualité et durée : un compromis visible}
+Les constructions sont très rapides et les améliorations demandent davantage
+de temps. Le tableau~\ref{tab:temps} fixe $p=5$ pour faciliter la lecture des
+ordres de grandeur. Le tabou met davantage de temps que la recherche locale,
+ce qui est cohérent avec le nombre de candidats évalués. La différence de
+durée n'est pas strictement proportionnelle à 15 : les ensembles de stations
+et le nombre de changements 2-opt diffèrent entre trajectoires.
+
+\begin{table}[htbp]\centering
+\input{tableaux/temps_p5}
+\caption{Temps moyens observés à $p=5$ et $\alpha=1$, en millisecondes ; une exécution
+pour la construction, trois graines pour les recherches.}
+\label{tab:temps}\sourcetable
+\end{table}
+
+Sur \code{kroA100}, à cinq stations, la moyenne de coût passe de 68\,427,57
+pour la construction à 60\,284,12 pour la locale et 58\,433,18 pour le tabou.
+La dispersion est aussi différente : les écarts-types observés sont
+respectivement 1\,653,97 et 59,57 pour les deux recherches. Le tabou est ici
+plus régulier sur trois graines, en contrepartie d'un temps moyen d'environ
+118,40 ms, contre 10,27 ms pour la locale.
+
+\section{Lire l'effet du nombre de stations sans le confondre avec la taille}
+Les figures~\ref{fig:att48-camp} et~\ref{fig:kro-camp} conservent la même
+instance et font varier $p$. Elles permettent de relier la valeur de l'objectif,
+le temps et le gain face à la construction. Elles ne comparent pas directement
+le coût brut de \code{att48} à celui de \code{kroA100}.
+
+La cardinalité modifie simultanément le nombre de stations à choisir, la
+taille du cycle et le voisinage d'échange. Le nombre de couples
+$(p-1)(n-p)$ n'est pas constant lorsque $p$ varie. Même avec le même budget
+de candidats, le degré d'exploration du voisinage change. Une interprétation
+du seul coût final doit conserver ces différences à l'esprit.
+
+\bilan{Les recherches réduisent les coûts de la construction dans les 24 cas.
+Le tabou obtient de meilleurs coûts moyens dans ce protocole, avec un effort
+et un temps supérieurs. Les garanties d'optimalité restent limitées aux cas
+pour lesquels une preuve a effectivement été obtenue.}
+
+\figureRS[0.96]{comparaison_att48.pdf}{Comparaison par cardinalité sur att48 :
+coût moyen, temps moyen et gain relatif face à la construction.}{fig:att48-camp}
+\figureRS[0.96]{comparaison_kroA100.pdf}{Même lecture sur kroA100. Les solutions exactes
+ne sont pas lancées sur cette instance dans la campagne.}{fig:kro-camp}
+\FloatBarrier

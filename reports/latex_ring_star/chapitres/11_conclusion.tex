@@ -1,0 +1,46 @@
+\chapter*{Conclusion générale}
+\addcontentsline{toc}{chapter}{Conclusion générale}
+Le problème Ring-Star fournit un cadre clair pour étudier ensemble le choix
+des stations et leur ordre de desserte sur une ligne circulaire. La
+formulation retenue fixe la cardinalité, impose une station et minimise
+une somme pondérée de longueur d'anneau et de distances d'accès.
+L'intégration du voyageur de commerce comme cas particulier explique sa
+NP-difficulté et le besoin de méthodes complémentaires.
+
+La PLNE avec flot exprime directement la sélection, les affectations et
+la connexité du cycle. Elle apporte une garantie lorsque CBC termine avec
+une preuve, ou une solution réalisable accompagnée d'une borne lorsqu'il
+s'arrête avant. Les méthodes approchées ont un rôle différent : construire
+rapidement une solution, puis explorer des échanges de stations en
+réévaluant les deux composantes de l'objectif.
+
+Sur les 24 cas de la campagne principale, les recherches améliorent les
+coûts moyens de la construction. Le gain médian atteint 11,79\,\% pour
+la locale et 13,67\,\% pour le tabou. La meilleure moyenne tabou dans
+22 cas s'accompagne d'un effort de calcul plus important. Le résultat
+doit donc être présenté comme un compromis observé sous des réglages
+précis, et non comme une supériorité démontrée à ressources égales.
+
+La comparaison à un optimum est possible sur trois petits cas. Sur
+Ulysses16 à cinq stations, les trois trajectoires tabou atteignent le
+coût prouvé de 65,3775. Sur les grandes instances, les solutions
+restent réalisables et améliorées, sans preuve de leur proximité à
+l'optimum. L'exemple att48 illustre cette distinction : une baisse de
+12,47\,\% est mesurée par rapport à la construction, avec un coût final
+de 42\,743,75, mais sans certificat d'optimalité.
+
+L'organisation des sorties fait partie du résultat du projet. Les
+solutions, paramètres, traces et versions permettent de retrouver
+l'origine d'un chiffre et de redessiner les figures. La relecture
+indépendante des coûts et les tests complètent cette démarche.
+Le défaut de dernière ligne ignorée repéré dans le CSV rappelle
+l'intérêt de rapprocher les fichiers entre eux, même lorsque les
+solutions et les synthèses sont correctes.
+
+La suite du travail peut se concentrer sur des budgets équitables,
+davantage de graines et une étude du poids $\alpha$. Une application
+opérationnelle demanderait en parallèle de remplacer les distances
+planes et les poids uniformes par des données de déplacement,
+des demandes et des contraintes réelles. Le projet constitue ainsi
+une base expérimentale documentée pour explorer la localisation-routage,
+avec des résultats dont la portée et les limites sont explicites.

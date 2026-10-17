@@ -1,0 +1,27 @@
+\chapter{Tableau complet des coûts de la campagne}
+Le tableau suivant couvre les 24 problèmes de la campagne, tous avec
+$\alpha=1$. La construction est exécutée une fois. Les colonnes locale
+et tabou indiquent la moyenne et l'écart-type d'échantillon des trois graines
+$0,1,2$. Les valeurs sont exprimées dans les unités de coordonnées de
+chaque instance ; elles ne sont pas comparables en valeur brute d'une
+instance à l'autre.
+
+Les quatre résolutions PLNE sont présentées séparément au
+tableau~\ref{tab:exacts}. Les 20 cas exacts ignorés n'ont aucun coût de
+solution à renseigner. Les décimales sont arrondies pour la lecture ;
+les JSON conservent la précision de calcul.
+
+\begin{table}[htbp]\centering
+{\fontsize{9}{12}\selectfont\setlength{\tabcolsep}{4pt}
+\input{tableaux/resultats_complets}}
+\caption{Coûts moyens de construction, recherche locale et recherche tabou,
+sur tous les cas de la campagne de démonstration.}
+\sourcetable
+\end{table}
+\FloatBarrier
+
+La source détaillée originale est \code{resultats/campagne/runs.csv}.
+La copie \code{resultats/runs_reconcilies.csv} ajoute uniquement le cas
+PLNE ignoré terminal, sans solution ni coût. Le fichier
+\code{resultats/provenance_rapport.json} décrit cette opération et conserve
+les empreintes des fichiers ayant servi à la rédaction.

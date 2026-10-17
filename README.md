@@ -219,3 +219,5 @@ Un workflow GitHub Actions est configuré pour Python 3.10 et 3.12.
 | `pyproject.toml` | Métadonnées, dépendances et commande `ring-star` |
 
 Pour les options avancées et les opérations de maintenance, consulter le [guide d’exécution](GUIDE_EXECUTION.md).
+
+- [Rapport du projet (PDF)](reports/RingStar_rapport.pdf)

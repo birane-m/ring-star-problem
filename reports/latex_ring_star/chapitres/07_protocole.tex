@@ -1,0 +1,112 @@
+\chapter{Données, protocole et indicateurs}\label{chap:protocole}
+\section{Huit nuages de points issus de TSPLIB}
+Les fichiers d'entrée proviennent de TSPLIB, bibliothèque de référence pour
+le voyageur de commerce\cite{tsplib}. Le projet utilise uniquement les coordonnées
+des huit fichiers présents dans le dépôt. Le tableau~\ref{tab:instances} résume
+leurs dimensions et leurs types de distance déclarés dans les fichiers sources.
+\begin{table}[htbp]\centering
+\input{tableaux/instances}
+\caption{Instances de la campagne principale. Le type source est conservé comme métadonnée.}
+\label{tab:instances}
+\sourcecalcul{en-têtes des huit fichiers TSPLIB fournis avec le projet.}
+\end{table}
+
+\textbf{La convention de calcul du projet diffère de la métrique officielle
+de plusieurs instances.} Toutes les coordonnées sont traitées comme des points
+du plan, avec la distance euclidienne non arrondie. La transformation propre
+à \code{ATT}, la distance géographique de \code{GEO} et l'arrondi de
+\code{EUC_2D} ne sont pas appliqués. Cette convention suit le cadre simplifié
+de l'énoncé et rend les méthodes comparables entre elles.
+
+En particulier, les coordonnées des instances Ulysses ne donnent pas ici des
+distances physiques en kilomètres. Les optima TSP officiels de TSPLIB ne sont
+pas des références valides pour les coûts calculés dans ce projet. Les coûts
+bruts de deux instances différentes ne doivent pas non plus être additionnés
+ou classés comme s'ils étaient exprimés dans une unité commune.
+
+\section{Plan expérimental réellement exécuté}
+Pour chaque instance, trois cardinalités sont retenues : $p=3,5,10$.
+Le poids reste fixé à $\alpha=1$, d'où $8\times3=24$ problèmes distincts.
+La construction est exécutée une fois. Les recherches locale et tabou sont
+répétées sur les graines $0,1,2$, avec 100 itérations chacune. La recherche
+tabou utilise une durée de 10 itérations et 15 candidats par itération.
+
+La PLNE n'est tentée que si $n\leq22$ et $p\leq5$, sous une limite de cinq
+secondes pour CBC. Elle est exécutée une seule fois dans les cas admissibles,
+avec le réglage de solveur enregistré. Les cas qui dépassent les seuils sont
+explicitement classés \code{skipped}. Ils ne constituent ni des échecs de
+résolution ni des solutions de coût nul.
+
+Au total, le plan contient
+\begin{equation}
+24\times(1+3+3+1)=192
+\end{equation}
+enregistrements attendus, en comptant les 20 cas exacts ignorés. Il comporte
+172 exécutions avec une solution sauvegardée : 24 constructions, 72 recherches
+locales, 72 recherches tabou et quatre PLNE. Parmi ces dernières, trois ont
+une preuve et une reste réalisable sans preuve.
+
+Les configurations \code{benchmark_full.json} et
+\code{benchmark_time_budget.json} sont proposées pour prolonger l'étude.
+La première explore notamment d'autres valeurs de $\alpha$ et davantage de
+graines ; la seconde fixe un budget d'amélioration commun. Leur présence
+dans le dépôt ne vaut pas résultat expérimental. Le rapport n'attribue donc
+aucun effet mesuré au changement de $\alpha$.
+
+\section{Coûts moyens, dispersion et amélioration}
+Pour une méthode stochastique et un cas fixé, soient $C_1,\ldots,C_m$ les
+coûts des $m$ exécutions réussies. La synthèse conserve notamment la moyenne,
+la médiane, le minimum, le maximum et l'écart-type d'échantillon :
+\begin{equation}
+\overline C=\frac1m\sum_{s=1}^m C_s,\qquad
+s_C=\sqrt{\frac{1}{m-1}\sum_{s=1}^m(C_s-\overline C)^2}.
+\end{equation}
+Avec une seule exécution, aucun écart-type empirique n'est fourni. Avec trois
+graines, cet indicateur décrit une dispersion observée limitée ; il n'est pas
+une garantie sur l'ensemble des trajectoires possibles et ne constitue pas
+un intervalle de confiance.
+
+Le gain face à la construction de coût $C_0$ est
+\begin{equation}
+G=100\,\frac{C_0-\overline C}{C_0}.
+\end{equation}
+Il compare la méthode à son point de départ sur le même problème. Il ne mesure
+pas la proximité à l'optimum. La synthèse globale des gains donne le même poids
+aux 24 cas ; la médiane n'est ni pondérée par $n$ ni calculée sur une somme
+de coûts d'unités différentes.
+
+Lorsqu'une valeur optimale $C^*>0$ a été prouvée pour le même cas, on calcule
+\begin{equation}
+g^*=100\,\frac{\overline C-C^*}{C^*}.
+\end{equation}
+En l'absence de preuve, cet écart reste non renseigné. La meilleure solution
+connue ou une solution PLNE arrêtée au temps limite ne remplace pas $C^*$.
+
+\section{Temps mesuré et environnement}
+Le temps d'exécution mesuré inclut le calcul des distances et l'optimisation,
+dont l'initialisation des recherches. Il exclut la lecture du fichier source,
+l'écriture des résultats et le dessin des figures. Dans le cas PLNE, il inclut
+la construction du modèle et son traitement par le solveur. Le temps total
+peut donc légèrement dépasser les cinq secondes configurées pour CBC.
+
+Les métadonnées enregistrent Python 3.12.14, PuLP 3.3.2 et Matplotlib 3.11.2,
+sous Linux x86\_64. Les versions sont celles de l'exécution sauvegardée, et non
+celles d'une documentation en ligne plus récente. Le modèle utilise CBC et
+archive son journal. Les durées dépendent de cette machine et du contexte
+d'exécution ; les temps très courts de construction sont particulièrement
+sensibles au bruit de mesure.
+
+\section{Règles de lecture des figures}
+Les comparaisons par instance montrent des coûts et temps moyens, avec les
+écarts-types disponibles. La carte des gains compare chaque recherche à la
+construction pour le même cas. Les figures de solutions représentent la
+meilleure graine sauvegardée et sont identifiées comme telles. Elles ne doivent
+pas être interprétées comme une représentation de la solution moyenne.
+
+Les coordonnées conservent leur rapport d'aspect, y compris pour les nuages
+allongés. La racine est distinguée, les stations sont visibles et les arcs
+d'accès restent plus discrets que l'anneau. L'enjeu est de rendre lisibles
+les deux composantes du modèle sans déplacer les points.
+\bilan{Les chiffres présentés concernent une campagne précise, avec un poids
+unique et trois graines. Les statuts, les unités et l'effort d'évaluation
+font partie des résultats au même titre que les coûts.}

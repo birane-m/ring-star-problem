@@ -1,0 +1,96 @@
+\chapter{Améliorer la sélection par recherche locale et tabou}
+\section{Un voisinage commun d'échange de stations}
+À partir d'un ensemble $S$, on retire une station $u\in S\setminus\{r\}$ et
+on ajoute un point $v\in V\setminus S$. Le voisin est défini par
+\begin{equation}
+S'=(S\setminus\{u\})\cup\{v\}.
+\end{equation}
+La cardinalité et la présence de la racine sont conservées par construction.
+Le nombre de couples possibles vaut $(p-1)(n-p)$. Si $p=n$, aucun échange
+n'existe et la recherche s'arrête avec un voisinage vide.
+
+Pour chaque ensemble candidat, les affectations sont recalculées au plus proche,
+le cycle est reconstruit par plus proche voisin puis amélioré par 2-opt.
+L'évaluation porte sur le coût global $\alpha L+A$, et non sur le seul coût
+d'accès. Cette reconstruction permet d'adapter le cycle à la nouvelle sélection,
+mais son résultat reste heuristique. Elle ne calcule pas le meilleur cycle
+possible pour chaque ensemble candidat.
+
+\section{Recherche locale par échantillonnage}
+La recherche locale part de la construction. À chaque itération, elle tire une
+station retirable et un point à ajouter, évalue cet unique voisin, puis
+l'accepte seulement s'il améliore strictement le coût courant. Un voisin rejeté
+laisse la solution inchangée. La meilleure solution est donc aussi la solution
+courante et son coût ne croît pas.
+
+L'arrêt intervient lorsque le budget d'itérations ou de temps est atteint,
+ou lorsque le voisinage est vide. Comme les voisins sont tirés au hasard et
+peuvent être répétés d'une itération à l'autre, l'absence d'amélioration sur
+les tirages observés ne prouve pas l'absence d'un meilleur voisin dans
+l'ensemble complet. On parle ici de descente échantillonnée, et non de
+recherche exhaustive jusqu'à certification d'un optimum local.
+
+La graine initialise un générateur pseudo-aléatoire propre à la recherche.
+Les listes de candidats sont triées avant le tirage pour stabiliser les choix.
+Cette précaution évite de faire dépendre un résultat de l'ordre d'itération
+d'un ensemble Python.
+
+\section{Recherche tabou : accepter des détours contrôlés}
+La recherche tabou distingue la solution courante de la meilleure solution
+rencontrée. À chaque itération, elle échantillonne sans remise jusqu'à $k$
+couples d'échange distincts dans le voisinage courant. Tous les candidats
+évalués contribuent au compteur de travail, y compris ceux qui sont ensuite
+écartés par la règle tabou.
+
+Le mouvement admissible de plus faible coût est choisi dans cet échantillon.
+Il peut dégrader le coût courant. Cette possibilité permet de quitter une
+région où une descente stricte resterait bloquée. En parallèle, la meilleure
+solution globale n'est remplacée que par une amélioration stricte : le résultat
+retourné ne se dégrade donc pas avec les détours de la trajectoire.
+
+Lorsqu'une station est retirée, sa réintroduction est interdite pendant la
+durée tabou configurée. Une durée de un bloque bien son retour à l'itération
+suivante. L'interdiction porte sur l'ajout du sommet retiré ; elle ne décrit pas
+une mémoire de toutes les solutions visitées. Une règle d'aspiration autorise
+un mouvement tabou s'il améliore la meilleure valeur globale.
+
+S'il n'existe aucun mouvement admissible dans l'échantillon, la solution
+courante reste inchangée et l'itération est comptée. Cela ne signifie pas que
+tout le voisinage est interdit. Une nouvelle itération peut échantillonner
+d'autres échanges ou bénéficier de l'expiration d'une interdiction.
+
+\section{Déroulé de la recherche tabou}
+\begin{enumerate}
+\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}\setlength{\parsep}{0pt}
+\item Initialiser la solution courante et la meilleure solution avec la construction.
+\item Tirer jusqu'à $k$ échanges distincts et reconstruire leur solution complète.
+\item Écarter les mouvements tabous, sauf en cas d'aspiration.
+\item Adopter le meilleur mouvement admissible, même s'il dégrade la solution courante.
+\item Mettre à jour les interdictions, la meilleure solution et les compteurs.
+\item Répéter tant qu'un budget et un voisinage exploitable restent disponibles.
+\end{enumerate}
+Le nombre de mouvements effectués peut être inférieur au nombre d'itérations.
+Ces deux nombres sont exportés séparément, de même que le nombre de candidats
+évalués. Le budget est une limite demandée ; les compteurs décrivent le travail
+effectivement réalisé.
+
+\section{Budgets et limites de comparaison}
+Dans la campagne principale, les deux méthodes disposent de 100 itérations.
+La recherche locale évalue donc 100 voisins par exécution. La recherche tabou
+évalue 15 voisins à chaque itération, soit 1\,500 dans les cas de cette campagne.
+Les voisinages y sont assez grands pour fournir ces 15 couples distincts.
+La comparaison porte ainsi sur deux réglages pratiques, avec des efforts différents.
+
+Le budget temporel optionnel des recherches commence après la construction
+initiale. Une évaluation déjà commencée peut dépasser légèrement la limite.
+Les temps exportés pour l'exécution complète incluent, eux, les distances,
+la construction et l'amélioration. Les horloges des traces sont relatives
+à la phase d'amélioration ; elles n'ont donc pas exactement la même origine.
+
+Des comparaisons à mêmes nombres d'évaluations et mêmes budgets de temps
+permettraient de mieux isoler l'effet du tabou. La campagne temporelle
+configurée dans le projet n'a pas été exécutée intégralement.
+\bilan{Les deux recherches explorent la même famille d'échanges. La locale
+privilégie les améliorations immédiates ; la tabou explore davantage et peut
+franchir des dégradations temporaires. Les budgets expliquent une partie
+du compromis observé entre coût final et temps.}

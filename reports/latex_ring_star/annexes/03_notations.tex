@@ -1,0 +1,43 @@
+\chapter{Notations et conventions de lecture}
+\begin{table}[htbp]\small
+\begin{tabularx}{\textwidth}{lL}\toprule
+Symbole & Définition \\\midrule
+$V$, $n$ & Ensemble des points et nombre de points. \\
+$r$ & Station imposée, usuellement le premier sommet. \\
+$p$, $S$ & Nombre de stations et ensemble sélectionné, avec $|S|=p$. \\
+$d_{ij}$ & Distance euclidienne non arrondie dans le plan des coordonnées. \\
+$\pi$ & Permutation des stations ; le retour à la première est implicite. \\
+$a(i)$ & Station affectée au point $i$. \\
+$L$, $A$ & Longueur du cycle et somme des distances d'accès. \\
+$\alpha$, $C$ & Poids du cycle et coût total $C=\alpha L+A$. \\
+$z_i$, $y_{ij}$ & Variables binaires de station et d'affectation. \\
+$x_{ij}$, $f_{ij}$ & Variable binaire d'arête et flot continu de connexité. \\
+$B$, $C^*$ & Borne inférieure et optimum prouvé lorsqu'il est disponible. \\
+$\overline C$, $s_C$ & Moyenne et écart-type d'échantillon des coûts par graine. \\
+$G$ & Gain relatif face à la construction du même cas. \\
+$g^*$ & Écart de coût à un optimum prouvé, en pourcentage. \\
+$g_B$ & Écart entre une solution et la borne du solveur, rapporté à $|C|$. \\
+\bottomrule\end{tabularx}
+\caption{Notations principales utilisées dans le rapport.}
+\end{table}
+
+\section{Indices et cycle fermé}
+Le rapport et les listes exportées utilisent la numérotation à partir de 1.
+Les structures Python utilisent des indices à partir de 0. Les coordonnées
+de \code{problem} dans un JSON sont dans l'ordre interne ; les listes de
+stations, de cycle et d'affectations lisibles sont numérotées à partir de 1.
+Le champ interne \code{problem.required_station} ne doit donc pas être
+comparé directement à une liste exportée sans conversion.
+
+Le cycle est enregistré sous forme d'une permutation de longueur $p$.
+La station initiale n'est pas répétée en dernière position dans cette liste.
+Le calcul de longueur ajoute toujours l'arête de fermeture. Le cycle
+$1,2,3$ désigne ainsi $1\to2\to3\to1$.
+
+\section{Statuts d'exécution}
+\code{ok} désigne une exécution heuristique réussie ; il ne signifie pas
+optimal. \code{optimal} indique une preuve issue du solveur.
+\code{feasible_time_limited} signale une solution réalisable sans preuve
+dans le budget. \code{skipped} correspond à un cas volontairement non lancé.
+Les erreurs ou absences de solution ont des statuts distincts et ne doivent
+pas être transformées en coûts nuls pour calculer une moyenne.

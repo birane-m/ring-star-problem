@@ -1,0 +1,239 @@
+{
+  "instance": "ulysses22.tsp",
+  "n": 22,
+  "p": 3,
+  "alpha": 1.0,
+  "method": "greedy",
+  "edge_weight_type": "GEO",
+  "required_station": 1,
+  "stations": [
+    1,
+    9,
+    11
+  ],
+  "cycle": [
+    1,
+    9,
+    11
+  ],
+  "assignments": [
+    {
+      "point": 1,
+      "station": 1
+    },
+    {
+      "point": 2,
+      "station": 1
+    },
+    {
+      "point": 3,
+      "station": 1
+    },
+    {
+      "point": 4,
+      "station": 1
+    },
+    {
+      "point": 5,
+      "station": 9
+    },
+    {
+      "point": 6,
+      "station": 9
+    },
+    {
+      "point": 7,
+      "station": 9
+    },
+    {
+      "point": 8,
+      "station": 1
+    },
+    {
+      "point": 9,
+      "station": 9
+    },
+    {
+      "point": 10,
+      "station": 9
+    },
+    {
+      "point": 11,
+      "station": 11
+    },
+    {
+      "point": 12,
+      "station": 1
+    },
+    {
+      "point": 13,
+      "station": 1
+    },
+    {
+      "point": 14,
+      "station": 1
+    },
+    {
+      "point": 15,
+      "station": 1
+    },
+    {
+      "point": 16,
+      "station": 1
+    },
+    {
+      "point": 17,
+      "station": 1
+    },
+    {
+      "point": 18,
+      "station": 1
+    },
+    {
+      "point": 19,
+      "station": 9
+    },
+    {
+      "point": 20,
+      "station": 9
+    },
+    {
+      "point": 21,
+      "station": 9
+    },
+    {
+      "point": 22,
+      "station": 1
+    }
+  ],
+  "costs": {
+    "metro": 52.63758510080683,
+    "walking": 85.0832770100373,
+    "total": 137.72086211084414
+  },
+  "plot": "figures/solution.png",
+  "schema_version": 2,
+  "problem": {
+    "name": "ulysses22.tsp",
+    "points": [
+      [
+        38.24,
+        20.42
+      ],
+      [
+        39.57,
+        26.15
+      ],
+      [
+        40.56,
+        25.32
+      ],
+      [
+        36.26,
+        23.12
+      ],
+      [
+        33.48,
+        10.54
+      ],
+      [
+        37.56,
+        12.19
+      ],
+      [
+        38.42,
+        13.11
+      ],
+      [
+        37.52,
+        20.44
+      ],
+      [
+        41.23,
+        9.1
+      ],
+      [
+        41.17,
+        13.05
+      ],
+      [
+        36.08,
+        -5.21
+      ],
+      [
+        38.47,
+        15.13
+      ],
+      [
+        38.15,
+        15.35
+      ],
+      [
+        37.51,
+        15.17
+      ],
+      [
+        35.49,
+        14.32
+      ],
+      [
+        39.36,
+        19.56
+      ],
+      [
+        38.09,
+        24.36
+      ],
+      [
+        36.09,
+        23.0
+      ],
+      [
+        40.44,
+        13.57
+      ],
+      [
+        40.33,
+        14.15
+      ],
+      [
+        40.37,
+        14.23
+      ],
+      [
+        37.57,
+        22.56
+      ]
+    ],
+    "required_station": 0,
+    "edge_weight_type": "GEO",
+    "distance_metric": "euclidean_unrounded",
+    "p": 3,
+    "alpha": 1.0
+  },
+  "configuration": {
+    "method": "greedy",
+    "seed": 0,
+    "iterations": null,
+    "tabu_tenure": 10,
+    "candidates_per_iteration": 15,
+    "time_limit": null,
+    "search_time_limit": null
+  },
+  "status": "ok",
+  "elapsed_seconds": 0.00017479300004197285,
+  "optimal": false,
+  "lower_bound": null,
+  "relative_gap": null,
+  "details": {},
+  "history": [
+    {
+      "iteration": 0,
+      "evaluations": 0,
+      "elapsed_seconds": 0.0,
+      "current_cost": 137.72086211084414,
+      "best_cost": 137.72086211084414
+    }
+  ],
+  "error": null
+}

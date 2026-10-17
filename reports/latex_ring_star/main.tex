@@ -1,0 +1,54 @@
+% Compiler depuis ce dossier : latexmk -pdf main.tex
+\documentclass[11pt,a4paper]{report}
+\input{preambule}
+\newcommand{\titrePreliminaire}[1]{%
+  {\sffamily\color{anthracite}\bfseries\fontsize{24}{29}\selectfont #1\par}%
+  \vspace{5mm}{\color{terreCuite}\rule{18mm}{1.2pt}\par}\vspace{8mm}}
+\renewcommand{\contentsname}{Sommaire}
+\setcounter{tocdepth}{1}
+\begin{document}
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Tableau}
+\input{page_de_garde}
+\pagenumbering{roman}
+\pagestyle{plain}
+\color{anthracite}
+\setlength{\parskip}{7pt}
+\setlength{\emergencystretch}{2em}
+\fontsize{11}{15}\selectfont
+\pdfbookmark[0]{Résumé}{resume}
+\titrePreliminaire{Résumé}
+\input{chapitres/00_resume}
+\clearpage
+\pdfbookmark[0]{Sommaire}{sommaire}
+\renewcommand{\contentsname}{Sommaire}
+{\setlength{\parskip}{0pt}\fontsize{10}{12.5}\selectfont\tableofcontents}
+\clearpage
+\pagenumbering{arabic}
+\phantomsection
+\titrePreliminaire{Introduction générale}
+\addcontentsline{toc}{chapter}{Introduction générale}
+\input{chapitres/01_introduction}
+\clearpage
+\part{Modélisation et méthodes de résolution}
+\input{chapitres/02_cadrage}
+\input{chapitres/03_modele}
+\input{chapitres/04_plne}
+\input{chapitres/05_heuristiques}
+\input{chapitres/06_metaheuristiques}
+\clearpage
+\part{Expérimentation, résultats et reproductibilité}
+\input{chapitres/07_protocole}
+\input{chapitres/08_resultats}
+\input{chapitres/09_etude_att48}
+\input{chapitres/10_qualite}
+\input{chapitres/11_conclusion}
+\input{glossaire}
+\input{references}
+\clearpage
+\appendix
+\renewcommand{\nomChapitre}{ANNEXE}
+\input{annexes/01_reproduction}
+\input{annexes/02_resultats}
+\input{annexes/03_notations}
+\end{document}

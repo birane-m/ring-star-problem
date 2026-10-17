@@ -1,0 +1,115 @@
+{
+  "instance": "ulysses22.tsp",
+  "n": 22,
+  "p": 3,
+  "alpha": 1.0,
+  "method": "initial_greedy",
+  "edge_weight_type": "GEO",
+  "required_station": 1,
+  "stations": [
+    1,
+    9,
+    11
+  ],
+  "cycle": [
+    1,
+    9,
+    11
+  ],
+  "assignments": [
+    {
+      "point": 1,
+      "station": 1
+    },
+    {
+      "point": 2,
+      "station": 1
+    },
+    {
+      "point": 3,
+      "station": 1
+    },
+    {
+      "point": 4,
+      "station": 1
+    },
+    {
+      "point": 5,
+      "station": 9
+    },
+    {
+      "point": 6,
+      "station": 9
+    },
+    {
+      "point": 7,
+      "station": 9
+    },
+    {
+      "point": 8,
+      "station": 1
+    },
+    {
+      "point": 9,
+      "station": 9
+    },
+    {
+      "point": 10,
+      "station": 9
+    },
+    {
+      "point": 11,
+      "station": 11
+    },
+    {
+      "point": 12,
+      "station": 1
+    },
+    {
+      "point": 13,
+      "station": 1
+    },
+    {
+      "point": 14,
+      "station": 1
+    },
+    {
+      "point": 15,
+      "station": 1
+    },
+    {
+      "point": 16,
+      "station": 1
+    },
+    {
+      "point": 17,
+      "station": 1
+    },
+    {
+      "point": 18,
+      "station": 1
+    },
+    {
+      "point": 19,
+      "station": 9
+    },
+    {
+      "point": 20,
+      "station": 9
+    },
+    {
+      "point": 21,
+      "station": 9
+    },
+    {
+      "point": 22,
+      "station": 1
+    }
+  ],
+  "costs": {
+    "metro": 52.63758510080683,
+    "walking": 85.0832770100373,
+    "total": 137.72086211084414
+  },
+  "plot": null
+}

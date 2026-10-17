@@ -1,0 +1,915 @@
+{
+  "instance": "ulysses16.tsp",
+  "n": 16,
+  "p": 10,
+  "alpha": 1.0,
+  "method": "tabu_search",
+  "edge_weight_type": "GEO",
+  "required_station": 1,
+  "stations": [
+    1,
+    3,
+    6,
+    7,
+    8,
+    9,
+    10,
+    13,
+    14,
+    16
+  ],
+  "cycle": [
+    1,
+    8,
+    13,
+    14,
+    7,
+    6,
+    9,
+    10,
+    16,
+    3
+  ],
+  "assignments": [
+    {
+      "point": 1,
+      "station": 1
+    },
+    {
+      "point": 2,
+      "station": 3
+    },
+    {
+      "point": 3,
+      "station": 3
+    },
+    {
+      "point": 4,
+      "station": 8
+    },
+    {
+      "point": 5,
+      "station": 6
+    },
+    {
+      "point": 6,
+      "station": 6
+    },
+    {
+      "point": 7,
+      "station": 7
+    },
+    {
+      "point": 8,
+      "station": 8
+    },
+    {
+      "point": 9,
+      "station": 9
+    },
+    {
+      "point": 10,
+      "station": 10
+    },
+    {
+      "point": 11,
+      "station": 9
+    },
+    {
+      "point": 12,
+      "station": 13
+    },
+    {
+      "point": 13,
+      "station": 13
+    },
+    {
+      "point": 14,
+      "station": 14
+    },
+    {
+      "point": 15,
+      "station": 14
+    },
+    {
+      "point": 16,
+      "station": 16
+    }
+  ],
+  "costs": {
+    "metro": 36.835501541124394,
+    "walking": 26.442713573441782,
+    "total": 63.27821511456618
+  },
+  "plot": null,
+  "schema_version": 2,
+  "problem": {
+    "name": "ulysses16.tsp",
+    "points": [
+      [
+        38.24,
+        20.42
+      ],
+      [
+        39.57,
+        26.15
+      ],
+      [
+        40.56,
+        25.32
+      ],
+      [
+        36.26,
+        23.12
+      ],
+      [
+        33.48,
+        10.54
+      ],
+      [
+        37.56,
+        12.19
+      ],
+      [
+        38.42,
+        13.11
+      ],
+      [
+        37.52,
+        20.44
+      ],
+      [
+        41.23,
+        9.1
+      ],
+      [
+        41.17,
+        13.05
+      ],
+      [
+        36.08,
+        -5.21
+      ],
+      [
+        38.47,
+        15.13
+      ],
+      [
+        38.15,
+        15.35
+      ],
+      [
+        37.51,
+        15.17
+      ],
+      [
+        35.49,
+        14.32
+      ],
+      [
+        39.36,
+        19.56
+      ]
+    ],
+    "required_station": 0,
+    "edge_weight_type": "GEO",
+    "distance_metric": "euclidean_unrounded",
+    "p": 10,
+    "alpha": 1.0
+  },
+  "configuration": {
+    "method": "tabu_search",
+    "seed": 1,
+    "iterations": 100,
+    "tabu_tenure": 10,
+    "candidates_per_iteration": 15,
+    "time_limit": null,
+    "search_time_limit": null
+  },
+  "status": "ok",
+  "elapsed_seconds": 0.06800477199999477,
+  "optimal": false,
+  "lower_bound": null,
+  "relative_gap": null,
+  "details": {
+    "performed_moves": 55,
+    "tabu_tenure": 10,
+    "candidates_per_iteration": 15,
+    "iterations": 100,
+    "iteration_budget": 100,
+    "evaluated_moves": 1500,
+    "stop_reason": "iteration_budget",
+    "initial_cost": 76.43541565372277,
+    "best_cost": 63.27821511456618
+  },
+  "history": [
+    {
+      "iteration": 0,
+      "evaluations": 0,
+      "elapsed_seconds": 0.0,
+      "current_cost": 76.43541565372277,
+      "best_cost": 76.43541565372277
+    },
+    {
+      "iteration": 1,
+      "evaluations": 15,
+      "elapsed_seconds": 0.0009563880000769132,
+      "current_cost": 68.7018760724464,
+      "best_cost": 68.7018760724464
+    },
+    {
+      "iteration": 2,
+      "evaluations": 30,
+      "elapsed_seconds": 0.0016035910000482545,
+      "current_cost": 64.10811169197245,
+      "best_cost": 64.10811169197245
+    },
+    {
+      "iteration": 3,
+      "evaluations": 45,
+      "elapsed_seconds": 0.002246548000130133,
+      "current_cost": 64.02930226223607,
+      "best_cost": 64.02930226223607
+    },
+    {
+      "iteration": 4,
+      "evaluations": 60,
+      "elapsed_seconds": 0.0028395900001214613,
+      "current_cost": 63.6448455037863,
+      "best_cost": 63.6448455037863
+    },
+    {
+      "iteration": 5,
+      "evaluations": 75,
+      "elapsed_seconds": 0.0035024660000999575,
+      "current_cost": 63.68544669162016,
+      "best_cost": 63.6448455037863
+    },
+    {
+      "iteration": 6,
+      "evaluations": 90,
+      "elapsed_seconds": 0.0043995850001010695,
+      "current_cost": 63.27821511456618,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 7,
+      "evaluations": 105,
+      "elapsed_seconds": 0.005033328000081383,
+      "current_cost": 64.40414201858155,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 8,
+      "evaluations": 120,
+      "elapsed_seconds": 0.005640391000042655,
+      "current_cost": 64.40414201858155,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 9,
+      "evaluations": 135,
+      "elapsed_seconds": 0.006281965000198397,
+      "current_cost": 64.40414201858155,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 10,
+      "evaluations": 150,
+      "elapsed_seconds": 0.006858823000129632,
+      "current_cost": 64.40414201858155,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 11,
+      "evaluations": 165,
+      "elapsed_seconds": 0.007424002000107066,
+      "current_cost": 64.40414201858155,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 12,
+      "evaluations": 180,
+      "elapsed_seconds": 0.0080343399999947,
+      "current_cost": 76.60851388839204,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 13,
+      "evaluations": 195,
+      "elapsed_seconds": 0.00861864900002729,
+      "current_cost": 76.60851388839204,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 14,
+      "evaluations": 210,
+      "elapsed_seconds": 0.009268796000014845,
+      "current_cost": 75.4375792006691,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 15,
+      "evaluations": 225,
+      "elapsed_seconds": 0.00985637000007955,
+      "current_cost": 76.25861906717736,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 16,
+      "evaluations": 240,
+      "elapsed_seconds": 0.010380698000062694,
+      "current_cost": 68.17596877249191,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 17,
+      "evaluations": 255,
+      "elapsed_seconds": 0.010989113000050565,
+      "current_cost": 65.9868616802714,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 18,
+      "evaluations": 270,
+      "elapsed_seconds": 0.011636867000106577,
+      "current_cost": 67.6848937508583,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 19,
+      "evaluations": 285,
+      "elapsed_seconds": 0.012211241000159134,
+      "current_cost": 67.6848937508583,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 20,
+      "evaluations": 300,
+      "elapsed_seconds": 0.012798793999991176,
+      "current_cost": 67.6848937508583,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 21,
+      "evaluations": 315,
+      "elapsed_seconds": 0.013429303000066284,
+      "current_cost": 67.6848937508583,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 22,
+      "evaluations": 330,
+      "elapsed_seconds": 0.014005198000177188,
+      "current_cost": 67.6848937508583,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 23,
+      "evaluations": 345,
+      "elapsed_seconds": 0.014647383999999875,
+      "current_cost": 66.24572313148126,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 24,
+      "evaluations": 360,
+      "elapsed_seconds": 0.015209109000124954,
+      "current_cost": 66.24572313148126,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 25,
+      "evaluations": 375,
+      "elapsed_seconds": 0.015842912000152864,
+      "current_cost": 67.52800187565953,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 26,
+      "evaluations": 390,
+      "elapsed_seconds": 0.01645776600003046,
+      "current_cost": 67.52800187565953,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 27,
+      "evaluations": 405,
+      "elapsed_seconds": 0.017073041000003286,
+      "current_cost": 65.34982843948582,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 28,
+      "evaluations": 420,
+      "elapsed_seconds": 0.017673214000069493,
+      "current_cost": 64.45274144930714,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 29,
+      "evaluations": 435,
+      "elapsed_seconds": 0.018283952000047066,
+      "current_cost": 64.46158360025721,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 30,
+      "evaluations": 450,
+      "elapsed_seconds": 0.018984505000162244,
+      "current_cost": 79.30033503819331,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 31,
+      "evaluations": 465,
+      "elapsed_seconds": 0.0196903570001723,
+      "current_cost": 79.30033503819331,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 32,
+      "evaluations": 480,
+      "elapsed_seconds": 0.020352743000103146,
+      "current_cost": 79.30033503819331,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 33,
+      "evaluations": 495,
+      "elapsed_seconds": 0.02113281500010089,
+      "current_cost": 79.30033503819331,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 34,
+      "evaluations": 510,
+      "elapsed_seconds": 0.02184106000004249,
+      "current_cost": 77.14894010511277,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 35,
+      "evaluations": 525,
+      "elapsed_seconds": 0.022504267000158507,
+      "current_cost": 77.14894010511277,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 36,
+      "evaluations": 540,
+      "elapsed_seconds": 0.02327010900012283,
+      "current_cost": 78.8787791897095,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 37,
+      "evaluations": 555,
+      "elapsed_seconds": 0.02399345600019842,
+      "current_cost": 78.8787791897095,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 38,
+      "evaluations": 570,
+      "elapsed_seconds": 0.02468794100013838,
+      "current_cost": 81.30669371535052,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 39,
+      "evaluations": 585,
+      "elapsed_seconds": 0.02560799399998359,
+      "current_cost": 80.08214861110724,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 40,
+      "evaluations": 600,
+      "elapsed_seconds": 0.026360495000062656,
+      "current_cost": 71.46500895126468,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 41,
+      "evaluations": 615,
+      "elapsed_seconds": 0.02703804400016452,
+      "current_cost": 68.59373996183291,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 42,
+      "evaluations": 630,
+      "elapsed_seconds": 0.02772405600012462,
+      "current_cost": 68.59373996183291,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 43,
+      "evaluations": 645,
+      "elapsed_seconds": 0.02834335700003976,
+      "current_cost": 68.59373996183291,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 44,
+      "evaluations": 660,
+      "elapsed_seconds": 0.028999293000197213,
+      "current_cost": 68.59373996183291,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 45,
+      "evaluations": 675,
+      "elapsed_seconds": 0.02975079300017569,
+      "current_cost": 68.07542239093088,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 46,
+      "evaluations": 690,
+      "elapsed_seconds": 0.030291846000181977,
+      "current_cost": 68.07542239093088,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 47,
+      "evaluations": 705,
+      "elapsed_seconds": 0.030834522000077413,
+      "current_cost": 63.63382110579461,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 48,
+      "evaluations": 720,
+      "elapsed_seconds": 0.03138051300015832,
+      "current_cost": 63.63382110579461,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 49,
+      "evaluations": 735,
+      "elapsed_seconds": 0.031929168000033314,
+      "current_cost": 65.13470816569527,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 50,
+      "evaluations": 750,
+      "elapsed_seconds": 0.03251474900002904,
+      "current_cost": 65.80929831469854,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 51,
+      "evaluations": 765,
+      "elapsed_seconds": 0.03304410500004451,
+      "current_cost": 79.50122559567413,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 52,
+      "evaluations": 780,
+      "elapsed_seconds": 0.0336140819999855,
+      "current_cost": 79.8381181719849,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 53,
+      "evaluations": 795,
+      "elapsed_seconds": 0.034268706000148086,
+      "current_cost": 79.8381181719849,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 54,
+      "evaluations": 810,
+      "elapsed_seconds": 0.034881498000004285,
+      "current_cost": 79.8381181719849,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 55,
+      "evaluations": 825,
+      "elapsed_seconds": 0.03562418400019851,
+      "current_cost": 79.8381181719849,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 56,
+      "evaluations": 840,
+      "elapsed_seconds": 0.03623061600001165,
+      "current_cost": 80.23745641500243,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 57,
+      "evaluations": 855,
+      "elapsed_seconds": 0.03707280300000093,
+      "current_cost": 80.23745641500243,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 58,
+      "evaluations": 870,
+      "elapsed_seconds": 0.037842038999997385,
+      "current_cost": 79.55017545092448,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 59,
+      "evaluations": 885,
+      "elapsed_seconds": 0.03849251700012246,
+      "current_cost": 79.55017545092448,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 60,
+      "evaluations": 900,
+      "elapsed_seconds": 0.039201693999984855,
+      "current_cost": 79.55017545092448,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 61,
+      "evaluations": 915,
+      "elapsed_seconds": 0.039925822999975935,
+      "current_cost": 68.06315356047827,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 62,
+      "evaluations": 930,
+      "elapsed_seconds": 0.04059588000018266,
+      "current_cost": 67.61679046232635,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 63,
+      "evaluations": 945,
+      "elapsed_seconds": 0.04123772499997358,
+      "current_cost": 64.46158360025721,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 64,
+      "evaluations": 960,
+      "elapsed_seconds": 0.04197956100006195,
+      "current_cost": 64.41298416953163,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 65,
+      "evaluations": 975,
+      "elapsed_seconds": 0.042756128000064564,
+      "current_cost": 64.41298416953163,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 66,
+      "evaluations": 990,
+      "elapsed_seconds": 0.043430482000076154,
+      "current_cost": 64.41298416953163,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 67,
+      "evaluations": 1005,
+      "elapsed_seconds": 0.04409895700018751,
+      "current_cost": 64.61215562597354,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 68,
+      "evaluations": 1020,
+      "elapsed_seconds": 0.044833281000137504,
+      "current_cost": 64.61215562597354,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 69,
+      "evaluations": 1035,
+      "elapsed_seconds": 0.04550765500016496,
+      "current_cost": 64.88444426212506,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 70,
+      "evaluations": 1050,
+      "elapsed_seconds": 0.046120066000185034,
+      "current_cost": 64.88444426212506,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 71,
+      "evaluations": 1065,
+      "elapsed_seconds": 0.04671822500017697,
+      "current_cost": 64.88444426212506,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 72,
+      "evaluations": 1080,
+      "elapsed_seconds": 0.04732353500003228,
+      "current_cost": 77.08881613193556,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 73,
+      "evaluations": 1095,
+      "elapsed_seconds": 0.04800393800019265,
+      "current_cost": 79.73168679386566,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 74,
+      "evaluations": 1110,
+      "elapsed_seconds": 0.04861918300002799,
+      "current_cost": 78.41026250552919,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 75,
+      "evaluations": 1125,
+      "elapsed_seconds": 0.049234738999984984,
+      "current_cost": 78.74715508183996,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 76,
+      "evaluations": 1140,
+      "elapsed_seconds": 0.049910445000023174,
+      "current_cost": 78.74715508183996,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 77,
+      "evaluations": 1155,
+      "elapsed_seconds": 0.05054790300005152,
+      "current_cost": 78.74715508183996,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 78,
+      "evaluations": 1170,
+      "elapsed_seconds": 0.051164230000040334,
+      "current_cost": 77.12972480724983,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 79,
+      "evaluations": 1185,
+      "elapsed_seconds": 0.05188400200017895,
+      "current_cost": 77.12972480724983,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 80,
+      "evaluations": 1200,
+      "elapsed_seconds": 0.05251995900016482,
+      "current_cost": 77.8729350424372,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 81,
+      "evaluations": 1215,
+      "elapsed_seconds": 0.05337607600017691,
+      "current_cost": 77.8729350424372,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 82,
+      "evaluations": 1230,
+      "elapsed_seconds": 0.05429458700018586,
+      "current_cost": 77.8729350424372,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 83,
+      "evaluations": 1245,
+      "elapsed_seconds": 0.055241631000171765,
+      "current_cost": 77.9911017084772,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 84,
+      "evaluations": 1260,
+      "elapsed_seconds": 0.056039861000044766,
+      "current_cost": 65.8614680255343,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 85,
+      "evaluations": 1275,
+      "elapsed_seconds": 0.05671846200016262,
+      "current_cost": 65.84874921505701,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 86,
+      "evaluations": 1290,
+      "elapsed_seconds": 0.05729369699997733,
+      "current_cost": 65.29062598872393,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 87,
+      "evaluations": 1305,
+      "elapsed_seconds": 0.05789774499999112,
+      "current_cost": 65.29062598872393,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 88,
+      "evaluations": 1320,
+      "elapsed_seconds": 0.05953179200014347,
+      "current_cost": 65.29062598872393,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 89,
+      "evaluations": 1335,
+      "elapsed_seconds": 0.060128399000177524,
+      "current_cost": 64.74736366709296,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 90,
+      "evaluations": 1350,
+      "elapsed_seconds": 0.06076798100002634,
+      "current_cost": 64.74736366709296,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 91,
+      "evaluations": 1365,
+      "elapsed_seconds": 0.06152905500016459,
+      "current_cost": 64.76964064138053,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 92,
+      "evaluations": 1380,
+      "elapsed_seconds": 0.06217662900007781,
+      "current_cost": 64.76964064138053,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 93,
+      "evaluations": 1395,
+      "elapsed_seconds": 0.06287666100001843,
+      "current_cost": 64.76964064138053,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 94,
+      "evaluations": 1410,
+      "elapsed_seconds": 0.0636292130000129,
+      "current_cost": 64.65147397534052,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 95,
+      "evaluations": 1425,
+      "elapsed_seconds": 0.0643136119999781,
+      "current_cost": 77.03173520485663,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 96,
+      "evaluations": 1440,
+      "elapsed_seconds": 0.06505043000015576,
+      "current_cost": 64.33915273301825,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 97,
+      "evaluations": 1455,
+      "elapsed_seconds": 0.06574615600015932,
+      "current_cost": 66.79953613997276,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 98,
+      "evaluations": 1470,
+      "elapsed_seconds": 0.06642041999998582,
+      "current_cost": 66.79953613997276,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 99,
+      "evaluations": 1485,
+      "elapsed_seconds": 0.0670742429999791,
+      "current_cost": 66.79953613997276,
+      "best_cost": 63.27821511456618
+    },
+    {
+      "iteration": 100,
+      "evaluations": 1500,
+      "elapsed_seconds": 0.06776066500015077,
+      "current_cost": 66.79953613997276,
+      "best_cost": 63.27821511456618
+    }
+  ],
+  "error": null
+}

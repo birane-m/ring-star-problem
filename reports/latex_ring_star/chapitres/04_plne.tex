@@ -1,0 +1,92 @@
+\chapter{Résolution exacte par une formulation compacte}
+\section{Variables et objectif}
+La formulation utilise le graphe non orienté complet $G=(V,E)$ et les arcs
+orientés $D=\{(i,j):i\ne j\}$ associés aux arêtes. Elle s'appuie sur quatre
+familles de variables :
+\begin{itemize}
+\item $z_i\in\{0,1\}$ indique si $i$ est une station ;
+\item $y_{ij}\in\{0,1\}$ indique si le point $i$ est affecté à la station $j$ ;
+\item $x_{ij}\in\{0,1\}$, pour $\{i,j\}\in E$, indique si cette arête appartient à l'anneau ;
+\item $f_{ij}\geq0$, pour $(i,j)\in D$, désigne un flot fictif de connexité.
+\end{itemize}
+Le flot n'est pas un flux de voyageurs. C'est un outil mathématique qui empêche
+la formation de plusieurs cycles disjoints. L'objectif est
+\begin{equation}
+\min\;\alpha\sum_{\{i,j\}\in E}d_{ij}x_{ij}
+       +\sum_{i\in V}\sum_{j\in V}d_{ij}y_{ij}.
+\end{equation}
+
+\section{Sélection, affectation et degré}
+Le nombre de stations et la présence du sommet imposé s'écrivent
+\begin{equation}
+\sum_{i\in V}z_i=p,\qquad z_r=1.
+\end{equation}
+Les affectations vérifient
+\begin{align}
+\sum_{j\in V}y_{ij}&=1 &&\forall i\in V,\\
+y_{ij}&\leq z_j &&\forall i,j\in V,\\
+y_{ii}&=z_i &&\forall i\in V.
+\end{align}
+Ces égalités imposent une affectation unique, exclusivement vers une station
+ouverte, ainsi que l'auto-affectation des stations. L'objectif choisit une station
+la plus proche à l'optimum, sans avoir à coder cette règle sous forme de
+contraintes supplémentaires.
+
+Chaque station possède deux arêtes d'anneau ; un point non retenu n'en possède
+aucune :
+\begin{equation}
+\sum_{j\in V\setminus\{i\}}x_{\{i,j\}}=2z_i\qquad\forall i\in V.
+\end{equation}
+Le programme ajoute également les liaisons $x_{ij}\leq z_i$ et $x_{ij}\leq z_j$.
+Dans une solution binaire, le degré exclut déjà les arêtes incidentes aux
+non-stations, mais ces liaisons rendent cette relation explicite dans le modèle.
+
+\section{Éliminer les cycles disjoints par un flot}
+Les seules contraintes de degré permettraient plusieurs cycles séparés. Pour
+obtenir un cycle unique, la racine émet $p-1$ unités de flot et chaque autre
+station en consomme une :
+\begin{align}
+\sum_{j\ne r}f_{rj}-\sum_{j\ne r}f_{jr}&=p-1,\\
+\sum_{j\ne i}f_{ji}-\sum_{j\ne i}f_{ij}&=z_i
+   &&\forall i\ne r.
+\end{align}
+Le flot ne peut emprunter qu'une arête retenue :
+\begin{equation}
+f_{ij}+f_{ji}\leq(p-1)x_{ij}\qquad\forall\{i,j\}\in E.
+\end{equation}
+Les variables sont aussi bornées individuellement par $p-1$ dans le code.
+
+Pour comprendre la connexité, supposons qu'un ensemble non vide de stations
+forme une composante qui ne contient pas $r$. En additionnant ses équations de
+conservation, les flots internes se compensent et la demande totale reste
+strictement positive. Or aucune arête active ne relie cette composante au reste
+du graphe, donc aucun flot ne peut y entrer. C'est une contradiction.
+Le graphe actif est ainsi connexe. Comme ses sommets ont tous degré deux et
+$p\geq3$, il forme un unique cycle.
+
+Réciproquement, tout cycle réalisable admet un flot de $p-1,p-2,\ldots,1$
+unités le long d'un sens du cycle, chaque station consommant une unité.
+
+\section{Taille du modèle et outil de résolution}
+Le modèle contient $n$ variables de station, $n^2$ d'affectation,
+$n(n-1)/2$ d'arête et $n(n-1)$ de flot. Ses nombres de variables et de contraintes
+sont d'ordre $n^2$ : c'est une formulation \emph{compacte}, ce qui ne rend pas
+sa résolution entière polynomiale.
+
+PuLP construit le modèle et appelle CBC, solveur de programmation entière
+à séparation et évaluation arborescente\cite{cbc}. Le projet conserve le journal,
+reconstruit le cycle et valide la solution. Il ne programme pas de séparation
+de sous-tours ni d'arbre de Gomory-Hu ; la formulation non compacte reste
+une extension possible.
+
+\section{Une méthode exacte peut s'arrêter sans preuve}
+Le programme contrôle les statuts du modèle et de la solution, vérifie
+l'intégralité des décisions binaires puis recalcule le coût. Il annonce
+\code{optimal} uniquement avec une preuve. Sous budget, une solution entière
+sans preuve est classée \code{feasible_time_limited}. Sans solution utilisable,
+aucun coût n'est inventé.
+
+Si le journal fournit une borne inférieure $B$ compatible avec le coût
+réalisable $C$, l'export conserve $g_B=(C-B)/\max(|C|,10^{-12})$.
+Une borne absente reste absente. Cet écart se distingue de celui à un
+optimum prouvé, défini au chapitre~\ref{chap:protocole}.

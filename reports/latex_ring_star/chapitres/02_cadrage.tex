@@ -1,0 +1,64 @@
+\chapter{Cadrage du projet et cahier des charges}
+\section{Finalité et périmètre}
+Le projet s'inscrit dans la SAÉ « Autour du tracé d'un métro circulaire » de
+Sup Galilée\cite{enonce}. Le sujet demande notamment de justifier la NP-difficulté,
+de visualiser les données et les solutions, de programmer une heuristique et une
+métaheuristique, d'implémenter une formulation compacte et de comparer les méthodes.
+La version étudiée fournit en plus une recherche locale distincte de la recherche
+tabou, des campagnes à plusieurs graines et des résultats consultables par des
+résumés Markdown.
+
+Un point représente une zone candidate à l'implantation d'une station. Les points
+ont tous le même poids dans le coût d'accès : aucune population, demande ou
+fréquence de déplacement n'est fournie. Les distances sont calculées à vol
+d'oiseau dans le plan des coordonnées. Elles ne décrivent ni un chemin dans la
+voirie ni une durée de transport. Le mot « coût » désigne ici la fonction objectif,
+sans conversion en euros.
+
+\section{Entrées et décisions attendues}
+Les entrées sont un fichier de coordonnées, un nombre de stations $p$, un poids
+$\alpha$ et les paramètres de la méthode. Le premier sommet du fichier est une
+station imposée. Les bornes retenues sont $3\leq p\leq n$ et $0\leq\alpha\leq10$.
+Le code utilise des indices internes de 0 à $n-1$ ; les exports lisibles numérotent
+les points de 1 à $n$. Ainsi, le sommet imposé habituel est 0 en interne et 1
+dans les résultats.
+
+Une sortie complète contient l'ensemble des stations, l'ordre du cycle, une
+affectation par point et les trois coûts : anneau non pondéré, accès et total
+pondéré. Elle précise aussi la méthode, la graine, les budgets et le statut.
+Pour les recherches, les traces distinguent le coût courant de la meilleure
+valeur rencontrée. Pour CBC, la preuve d'optimalité et la borne inférieure sont
+des informations séparées de la solution réalisable.
+
+\section{Exigences de qualité}
+\exigence{Réalisabilité}{Toute solution doit comporter exactement $p$ stations,
+inclure le sommet imposé et former un cycle simple passant par chacune d'elles.
+Chaque point est affecté à une station ouverte et chaque station à elle-même.}
+\exigence{Cohérence numérique}{Les méthodes partagent la même matrice de distances
+et la même évaluation du coût. Les coordonnées non finies et les paramètres
+hors domaine sont rejetés avant l'optimisation.}
+\exigence{Comparabilité}{Les méthodes approchées partent de la même construction
+pour un cas fixé. Les comparaisons conservent l'instance, $p$ et $\alpha$ ; les
+statistiques ne mélangent pas des problèmes différents.}
+\exigence{Traçabilité}{Une figure est reliée à une solution sauvegardée. Les
+coordonnées et l'ordre du cycle sont conservés pour régénérer la figure sans
+recalculer un autre parcours.}
+\exigence{Utilisation}{L'installation, les tests et les exécutions sont accessibles
+par une interface de commande et un Makefile. Les résultats individuels et les
+campagnes possèdent chacun un point d'entrée documenté.}
+
+\section{État du travail étudié}
+Le dépôt public est \href{https://github.com/birane-m/ring-star-problem}{birane-m/ring-star-problem}.
+Les trois commits publiés jusqu'à \code{8761003} regroupent le code expérimental,
+les outils du projet et la documentation. Les calculs présentés ont été enregistrés
+le 17 octobre 2026 ; leur empreinte de sources est conservée dans les métadonnées.
+Ils précèdent les dernières modifications de présentation et ne sont pas
+présentés comme une campagne relancée après chaque commit.
+
+Le contrôle documentaire a identifié une écriture finale manquante du CSV pour
+un cas PLNE ignoré. La correction jointe aux sources ne modifie aucun algorithme
+ni aucun coût ; elle fiabilise la complétude de l'export. Son statut et les
+contrôles associés sont explicités au chapitre~\ref{chap:qualite}.
+\bilan{Le projet répond à une question de localisation-routage dans un modèle
+géométrique défini. La validité des comparaisons dépend autant des conventions
+communes et des budgets que des valeurs finales des coûts.}

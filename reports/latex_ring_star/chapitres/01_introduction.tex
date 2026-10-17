@@ -1,0 +1,40 @@
+Concevoir une ligne de transport circulaire demande de choisir les lieux desservis
+et l'ordre dans lequel les relier. Desservir davantage de zones peut raccourcir
+l'accès des usagers, mais allonge parfois la ligne. À l'inverse, concentrer les
+stations peut produire un anneau court tout en éloignant certains points de leur
+station d'accès. Les deux décisions ne peuvent donc pas être traitées comme des
+objectifs entièrement indépendants.
+
+Le problème Ring-Star représente cette interaction dans un cadre géométrique
+simple. Un anneau relie une partie des points ; les autres lui sont rattachés par
+des arcs d'affectation. Le schéma de couverture illustre cette structure, avec les
+arêtes du cycle en trait plein et les affectations en pointillé. Il est emprunté à
+une publication consacrée à une variante bi-objective du problème\cite{figure}.
+Le présent projet retient une somme pondérée des deux coûts et fixe le nombre
+de stations, conformément à l'énoncé de la SAÉ\cite{enonce}.
+
+La problématique étudiée est la suivante :
+\begin{quote}\itshape
+Comment sélectionner un nombre fixé de stations et construire leur cycle pour
+réduire conjointement la longueur de la ligne et les distances d'accès, et quel
+compromis entre qualité, temps de calcul et garantie offrent les méthodes proposées ?
+\end{quote}
+
+Une solution exacte sert de référence lorsque le problème et le budget de calcul
+le permettent. Des méthodes approchées produisent rapidement des solutions
+réalisables et cherchent à améliorer leur coût. La comparaison doit prendre en
+compte la variabilité des recherches, le travail effectivement réalisé et le
+statut des résultats du solveur. Une valeur renvoyée par une formulation exacte
+ne devient pas un optimum prouvé du seul fait de l'utilisation d'une PLNE.
+
+Ce rapport présente les méthodes effectivement implémentées dans le projet et
+les résultats enregistrés de sa campagne de démonstration. Il explique les choix
+de représentation, les règles de calcul et les contrôles qui permettent de relier
+une figure à une solution précise. Les tableaux sont calculés depuis les exports
+archivés ; aucune nouvelle campagne de grande ampleur n'est supposée réalisée.
+
+La première partie développe le cadrage, la formulation mathématique, la
+NP-difficulté, la PLNE et les trois méthodes approchées. La seconde décrit le
+protocole, interprète les résultats, approfondit un cas sur \code{att48} et examine
+la qualité logicielle ainsi que les limites de l'étude. Un glossaire et des annexes
+permettent de retrouver les notations, les commandes et l'ensemble des coûts.

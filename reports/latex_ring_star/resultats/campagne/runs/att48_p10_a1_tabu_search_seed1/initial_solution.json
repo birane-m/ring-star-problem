@@ -1,0 +1,233 @@
+{
+  "instance": "att48",
+  "n": 48,
+  "p": 10,
+  "alpha": 1.0,
+  "method": "initial_greedy",
+  "edge_weight_type": "ATT",
+  "required_station": 1,
+  "stations": [
+    1,
+    14,
+    24,
+    26,
+    30,
+    32,
+    41,
+    46,
+    47,
+    48
+  ],
+  "cycle": [
+    1,
+    46,
+    30,
+    47,
+    14,
+    48,
+    32,
+    24,
+    26,
+    41
+  ],
+  "assignments": [
+    {
+      "point": 1,
+      "station": 1
+    },
+    {
+      "point": 2,
+      "station": 26
+    },
+    {
+      "point": 3,
+      "station": 14
+    },
+    {
+      "point": 4,
+      "station": 26
+    },
+    {
+      "point": 5,
+      "station": 48
+    },
+    {
+      "point": 6,
+      "station": 30
+    },
+    {
+      "point": 7,
+      "station": 30
+    },
+    {
+      "point": 8,
+      "station": 1
+    },
+    {
+      "point": 9,
+      "station": 1
+    },
+    {
+      "point": 10,
+      "station": 24
+    },
+    {
+      "point": 11,
+      "station": 47
+    },
+    {
+      "point": 12,
+      "station": 46
+    },
+    {
+      "point": 13,
+      "station": 14
+    },
+    {
+      "point": 14,
+      "station": 14
+    },
+    {
+      "point": 15,
+      "station": 46
+    },
+    {
+      "point": 16,
+      "station": 1
+    },
+    {
+      "point": 17,
+      "station": 30
+    },
+    {
+      "point": 18,
+      "station": 46
+    },
+    {
+      "point": 19,
+      "station": 30
+    },
+    {
+      "point": 20,
+      "station": 47
+    },
+    {
+      "point": 21,
+      "station": 47
+    },
+    {
+      "point": 22,
+      "station": 1
+    },
+    {
+      "point": 23,
+      "station": 14
+    },
+    {
+      "point": 24,
+      "station": 24
+    },
+    {
+      "point": 25,
+      "station": 14
+    },
+    {
+      "point": 26,
+      "station": 26
+    },
+    {
+      "point": 27,
+      "station": 30
+    },
+    {
+      "point": 28,
+      "station": 30
+    },
+    {
+      "point": 29,
+      "station": 48
+    },
+    {
+      "point": 30,
+      "station": 30
+    },
+    {
+      "point": 31,
+      "station": 46
+    },
+    {
+      "point": 32,
+      "station": 32
+    },
+    {
+      "point": 33,
+      "station": 46
+    },
+    {
+      "point": 34,
+      "station": 14
+    },
+    {
+      "point": 35,
+      "station": 26
+    },
+    {
+      "point": 36,
+      "station": 30
+    },
+    {
+      "point": 37,
+      "station": 30
+    },
+    {
+      "point": 38,
+      "station": 46
+    },
+    {
+      "point": 39,
+      "station": 32
+    },
+    {
+      "point": 40,
+      "station": 1
+    },
+    {
+      "point": 41,
+      "station": 41
+    },
+    {
+      "point": 42,
+      "station": 48
+    },
+    {
+      "point": 43,
+      "station": 30
+    },
+    {
+      "point": 44,
+      "station": 46
+    },
+    {
+      "point": 45,
+      "station": 24
+    },
+    {
+      "point": 46,
+      "station": 46
+    },
+    {
+      "point": 47,
+      "station": 47
+    },
+    {
+      "point": 48,
+      "station": 48
+    }
+  ],
+  "costs": {
+    "metro": 20285.261491953464,
+    "walking": 28548.631839889495,
+    "total": 48833.89333184296
+  },
+  "plot": null
+}

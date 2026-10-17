@@ -1,0 +1,1161 @@
+{
+  "instance": "att48",
+  "n": 48,
+  "p": 5,
+  "alpha": 1.0,
+  "method": "tabu_search",
+  "edge_weight_type": "ATT",
+  "required_station": 1,
+  "stations": [
+    1,
+    12,
+    13,
+    28,
+    42
+  ],
+  "cycle": [
+    1,
+    42,
+    13,
+    12,
+    28
+  ],
+  "assignments": [
+    {
+      "point": 1,
+      "station": 1
+    },
+    {
+      "point": 2,
+      "station": 42
+    },
+    {
+      "point": 3,
+      "station": 1
+    },
+    {
+      "point": 4,
+      "station": 42
+    },
+    {
+      "point": 5,
+      "station": 42
+    },
+    {
+      "point": 6,
+      "station": 28
+    },
+    {
+      "point": 7,
+      "station": 28
+    },
+    {
+      "point": 8,
+      "station": 1
+    },
+    {
+      "point": 9,
+      "station": 1
+    },
+    {
+      "point": 10,
+      "station": 42
+    },
+    {
+      "point": 11,
+      "station": 12
+    },
+    {
+      "point": 12,
+      "station": 12
+    },
+    {
+      "point": 13,
+      "station": 13
+    },
+    {
+      "point": 14,
+      "station": 13
+    },
+    {
+      "point": 15,
+      "station": 12
+    },
+    {
+      "point": 16,
+      "station": 1
+    },
+    {
+      "point": 17,
+      "station": 28
+    },
+    {
+      "point": 18,
+      "station": 28
+    },
+    {
+      "point": 19,
+      "station": 28
+    },
+    {
+      "point": 20,
+      "station": 12
+    },
+    {
+      "point": 21,
+      "station": 13
+    },
+    {
+      "point": 22,
+      "station": 1
+    },
+    {
+      "point": 23,
+      "station": 13
+    },
+    {
+      "point": 24,
+      "station": 42
+    },
+    {
+      "point": 25,
+      "station": 13
+    },
+    {
+      "point": 26,
+      "station": 42
+    },
+    {
+      "point": 27,
+      "station": 28
+    },
+    {
+      "point": 28,
+      "station": 28
+    },
+    {
+      "point": 29,
+      "station": 42
+    },
+    {
+      "point": 30,
+      "station": 28
+    },
+    {
+      "point": 31,
+      "station": 28
+    },
+    {
+      "point": 32,
+      "station": 13
+    },
+    {
+      "point": 33,
+      "station": 12
+    },
+    {
+      "point": 34,
+      "station": 13
+    },
+    {
+      "point": 35,
+      "station": 42
+    },
+    {
+      "point": 36,
+      "station": 28
+    },
+    {
+      "point": 37,
+      "station": 28
+    },
+    {
+      "point": 38,
+      "station": 1
+    },
+    {
+      "point": 39,
+      "station": 13
+    },
+    {
+      "point": 40,
+      "station": 12
+    },
+    {
+      "point": 41,
+      "station": 1
+    },
+    {
+      "point": 42,
+      "station": 42
+    },
+    {
+      "point": 43,
+      "station": 28
+    },
+    {
+      "point": 44,
+      "station": 28
+    },
+    {
+      "point": 45,
+      "station": 42
+    },
+    {
+      "point": 46,
+      "station": 12
+    },
+    {
+      "point": 47,
+      "station": 13
+    },
+    {
+      "point": 48,
+      "station": 42
+    }
+  ],
+  "costs": {
+    "metro": 13679.200757415016,
+    "walking": 41946.64199413392,
+    "total": 55625.84275154893
+  },
+  "plot": null,
+  "schema_version": 2,
+  "problem": {
+    "name": "att48",
+    "points": [
+      [
+        6734.0,
+        1453.0
+      ],
+      [
+        2233.0,
+        10.0
+      ],
+      [
+        5530.0,
+        1424.0
+      ],
+      [
+        401.0,
+        841.0
+      ],
+      [
+        3082.0,
+        1644.0
+      ],
+      [
+        7608.0,
+        4458.0
+      ],
+      [
+        7573.0,
+        3716.0
+      ],
+      [
+        7265.0,
+        1268.0
+      ],
+      [
+        6898.0,
+        1885.0
+      ],
+      [
+        1112.0,
+        2049.0
+      ],
+      [
+        5468.0,
+        2606.0
+      ],
+      [
+        5989.0,
+        2873.0
+      ],
+      [
+        4706.0,
+        2674.0
+      ],
+      [
+        4612.0,
+        2035.0
+      ],
+      [
+        6347.0,
+        2683.0
+      ],
+      [
+        6107.0,
+        669.0
+      ],
+      [
+        7611.0,
+        5184.0
+      ],
+      [
+        7462.0,
+        3590.0
+      ],
+      [
+        7732.0,
+        4723.0
+      ],
+      [
+        5900.0,
+        3561.0
+      ],
+      [
+        4483.0,
+        3369.0
+      ],
+      [
+        6101.0,
+        1110.0
+      ],
+      [
+        5199.0,
+        2182.0
+      ],
+      [
+        1633.0,
+        2809.0
+      ],
+      [
+        4307.0,
+        2322.0
+      ],
+      [
+        675.0,
+        1006.0
+      ],
+      [
+        7555.0,
+        4819.0
+      ],
+      [
+        7541.0,
+        3981.0
+      ],
+      [
+        3177.0,
+        756.0
+      ],
+      [
+        7352.0,
+        4506.0
+      ],
+      [
+        7545.0,
+        2801.0
+      ],
+      [
+        3245.0,
+        3305.0
+      ],
+      [
+        6426.0,
+        3173.0
+      ],
+      [
+        4608.0,
+        1198.0
+      ],
+      [
+        23.0,
+        2216.0
+      ],
+      [
+        7248.0,
+        3779.0
+      ],
+      [
+        7762.0,
+        4595.0
+      ],
+      [
+        7392.0,
+        2244.0
+      ],
+      [
+        3484.0,
+        2829.0
+      ],
+      [
+        6271.0,
+        2135.0
+      ],
+      [
+        4985.0,
+        140.0
+      ],
+      [
+        1916.0,
+        1569.0
+      ],
+      [
+        7280.0,
+        4899.0
+      ],
+      [
+        7509.0,
+        3239.0
+      ],
+      [
+        10.0,
+        2676.0
+      ],
+      [
+        6807.0,
+        2993.0
+      ],
+      [
+        5185.0,
+        3258.0
+      ],
+      [
+        3023.0,
+        1942.0
+      ]
+    ],
+    "required_station": 0,
+    "edge_weight_type": "ATT",
+    "distance_metric": "euclidean_unrounded",
+    "p": 5,
+    "alpha": 1.0
+  },
+  "configuration": {
+    "method": "tabu_search",
+    "seed": 2,
+    "iterations": 100,
+    "tabu_tenure": 10,
+    "candidates_per_iteration": 15,
+    "time_limit": null,
+    "search_time_limit": null
+  },
+  "status": "ok",
+  "elapsed_seconds": 0.06210085599991544,
+  "optimal": false,
+  "lower_bound": null,
+  "relative_gap": null,
+  "details": {
+    "performed_moves": 100,
+    "tabu_tenure": 10,
+    "candidates_per_iteration": 15,
+    "iterations": 100,
+    "iteration_budget": 100,
+    "evaluated_moves": 1500,
+    "stop_reason": "iteration_budget",
+    "initial_cost": 63668.04323160226,
+    "best_cost": 55625.84275154893
+  },
+  "history": [
+    {
+      "iteration": 0,
+      "evaluations": 0,
+      "elapsed_seconds": 0.0,
+      "current_cost": 63668.04323160226,
+      "best_cost": 63668.04323160226
+    },
+    {
+      "iteration": 1,
+      "evaluations": 15,
+      "elapsed_seconds": 0.0006846599999335012,
+      "current_cost": 60635.22622287076,
+      "best_cost": 60635.22622287076
+    },
+    {
+      "iteration": 2,
+      "evaluations": 30,
+      "elapsed_seconds": 0.001292394000074637,
+      "current_cost": 60031.4281678354,
+      "best_cost": 60031.4281678354
+    },
+    {
+      "iteration": 3,
+      "evaluations": 45,
+      "elapsed_seconds": 0.001882540999986304,
+      "current_cost": 61133.750456930466,
+      "best_cost": 60031.4281678354
+    },
+    {
+      "iteration": 4,
+      "evaluations": 60,
+      "elapsed_seconds": 0.0024808810001104575,
+      "current_cost": 59071.9081037042,
+      "best_cost": 59071.9081037042
+    },
+    {
+      "iteration": 5,
+      "evaluations": 75,
+      "elapsed_seconds": 0.003066300999989835,
+      "current_cost": 58680.08587533557,
+      "best_cost": 58680.08587533557
+    },
+    {
+      "iteration": 6,
+      "evaluations": 90,
+      "elapsed_seconds": 0.003662717999986853,
+      "current_cost": 60403.30738890968,
+      "best_cost": 58680.08587533557
+    },
+    {
+      "iteration": 7,
+      "evaluations": 105,
+      "elapsed_seconds": 0.004284011999970971,
+      "current_cost": 58890.38707394208,
+      "best_cost": 58680.08587533557
+    },
+    {
+      "iteration": 8,
+      "evaluations": 120,
+      "elapsed_seconds": 0.004872787000067547,
+      "current_cost": 58275.77952123638,
+      "best_cost": 58275.77952123638
+    },
+    {
+      "iteration": 9,
+      "evaluations": 135,
+      "elapsed_seconds": 0.005475733999901422,
+      "current_cost": 59365.70775256064,
+      "best_cost": 58275.77952123638
+    },
+    {
+      "iteration": 10,
+      "evaluations": 150,
+      "elapsed_seconds": 0.006063127000061286,
+      "current_cost": 60966.66784910376,
+      "best_cost": 58275.77952123638
+    },
+    {
+      "iteration": 11,
+      "evaluations": 165,
+      "elapsed_seconds": 0.006676419000086753,
+      "current_cost": 60457.80457265036,
+      "best_cost": 58275.77952123638
+    },
+    {
+      "iteration": 12,
+      "evaluations": 180,
+      "elapsed_seconds": 0.007282110000005559,
+      "current_cost": 57766.91624478297,
+      "best_cost": 57766.91624478297
+    },
+    {
+      "iteration": 13,
+      "evaluations": 195,
+      "elapsed_seconds": 0.007869733000006818,
+      "current_cost": 58213.62686916893,
+      "best_cost": 57766.91624478297
+    },
+    {
+      "iteration": 14,
+      "evaluations": 210,
+      "elapsed_seconds": 0.008492830000022877,
+      "current_cost": 58010.59275499599,
+      "best_cost": 57766.91624478297
+    },
+    {
+      "iteration": 15,
+      "evaluations": 225,
+      "elapsed_seconds": 0.009088375999908749,
+      "current_cost": 59069.303091611415,
+      "best_cost": 57766.91624478297
+    },
+    {
+      "iteration": 16,
+      "evaluations": 240,
+      "elapsed_seconds": 0.009712884999999005,
+      "current_cost": 58624.26659653179,
+      "best_cost": 57766.91624478297
+    },
+    {
+      "iteration": 17,
+      "evaluations": 255,
+      "elapsed_seconds": 0.010324613999955545,
+      "current_cost": 58831.58705532565,
+      "best_cost": 57766.91624478297
+    },
+    {
+      "iteration": 18,
+      "evaluations": 270,
+      "elapsed_seconds": 0.010923154000010982,
+      "current_cost": 58526.25775832091,
+      "best_cost": 57766.91624478297
+    },
+    {
+      "iteration": 19,
+      "evaluations": 285,
+      "elapsed_seconds": 0.011538940000036746,
+      "current_cost": 58219.97904188754,
+      "best_cost": 57766.91624478297
+    },
+    {
+      "iteration": 20,
+      "evaluations": 300,
+      "elapsed_seconds": 0.012317560999917987,
+      "current_cost": 55625.84275154893,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 21,
+      "evaluations": 315,
+      "elapsed_seconds": 0.01298293099989678,
+      "current_cost": 55796.28146045759,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 22,
+      "evaluations": 330,
+      "elapsed_seconds": 0.013621361000105026,
+      "current_cost": 56359.35963141926,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 23,
+      "evaluations": 345,
+      "elapsed_seconds": 0.014291708999962793,
+      "current_cost": 57213.225483640694,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 24,
+      "evaluations": 360,
+      "elapsed_seconds": 0.014874665999968784,
+      "current_cost": 56759.71670873919,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 25,
+      "evaluations": 375,
+      "elapsed_seconds": 0.015478424000093582,
+      "current_cost": 59143.91283231674,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 26,
+      "evaluations": 390,
+      "elapsed_seconds": 0.016064415000073495,
+      "current_cost": 61974.394828956094,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 27,
+      "evaluations": 405,
+      "elapsed_seconds": 0.016699779999953535,
+      "current_cost": 59519.37056417771,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 28,
+      "evaluations": 420,
+      "elapsed_seconds": 0.017303729000104795,
+      "current_cost": 57449.41552348598,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 29,
+      "evaluations": 435,
+      "elapsed_seconds": 0.0178865450000103,
+      "current_cost": 58502.8705849736,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 30,
+      "evaluations": 450,
+      "elapsed_seconds": 0.018477933999974994,
+      "current_cost": 60515.99639148536,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 31,
+      "evaluations": 465,
+      "elapsed_seconds": 0.01908906299991031,
+      "current_cost": 59662.59835384255,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 32,
+      "evaluations": 480,
+      "elapsed_seconds": 0.019702284999993935,
+      "current_cost": 58681.0502689593,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 33,
+      "evaluations": 495,
+      "elapsed_seconds": 0.020342318000075466,
+      "current_cost": 58096.99044351415,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 34,
+      "evaluations": 510,
+      "elapsed_seconds": 0.020943671999930302,
+      "current_cost": 57959.69198513104,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 35,
+      "evaluations": 525,
+      "elapsed_seconds": 0.021554730999923777,
+      "current_cost": 57531.38395421895,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 36,
+      "evaluations": 540,
+      "elapsed_seconds": 0.0221499459998995,
+      "current_cost": 58575.412336712354,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 37,
+      "evaluations": 555,
+      "elapsed_seconds": 0.022747774999970716,
+      "current_cost": 57899.50590137641,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 38,
+      "evaluations": 570,
+      "elapsed_seconds": 0.023338353000099232,
+      "current_cost": 58776.39999214043,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 39,
+      "evaluations": 585,
+      "elapsed_seconds": 0.023915160000115065,
+      "current_cost": 59062.824327914845,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 40,
+      "evaluations": 600,
+      "elapsed_seconds": 0.024533158999929583,
+      "current_cost": 61122.29855222445,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 41,
+      "evaluations": 615,
+      "elapsed_seconds": 0.02511298100012027,
+      "current_cost": 58941.49310002947,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 42,
+      "evaluations": 630,
+      "elapsed_seconds": 0.02572182700009762,
+      "current_cost": 59611.32810861234,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 43,
+      "evaluations": 645,
+      "elapsed_seconds": 0.02632776800010106,
+      "current_cost": 56712.35960550317,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 44,
+      "evaluations": 660,
+      "elapsed_seconds": 0.026912667000033252,
+      "current_cost": 56342.48616892377,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 45,
+      "evaluations": 675,
+      "elapsed_seconds": 0.027752579999969385,
+      "current_cost": 59081.723671781816,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 46,
+      "evaluations": 690,
+      "elapsed_seconds": 0.028406613000015568,
+      "current_cost": 61690.509321493795,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 47,
+      "evaluations": 705,
+      "elapsed_seconds": 0.029006786000081775,
+      "current_cost": 59259.23599269851,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 48,
+      "evaluations": 720,
+      "elapsed_seconds": 0.029610072999957993,
+      "current_cost": 59290.51490216787,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 49,
+      "evaluations": 735,
+      "elapsed_seconds": 0.030200469999954294,
+      "current_cost": 61665.960351922724,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 50,
+      "evaluations": 750,
+      "elapsed_seconds": 0.030794013000104314,
+      "current_cost": 60324.72279994335,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 51,
+      "evaluations": 765,
+      "elapsed_seconds": 0.031390890000011495,
+      "current_cost": 58018.26367633844,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 52,
+      "evaluations": 780,
+      "elapsed_seconds": 0.03197498899999118,
+      "current_cost": 57338.90444808943,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 53,
+      "evaluations": 795,
+      "elapsed_seconds": 0.03259928700003911,
+      "current_cost": 57722.66128464319,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 54,
+      "evaluations": 810,
+      "elapsed_seconds": 0.033176724999975704,
+      "current_cost": 56800.56503546619,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 55,
+      "evaluations": 825,
+      "elapsed_seconds": 0.03377000699993005,
+      "current_cost": 58985.29764681385,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 56,
+      "evaluations": 840,
+      "elapsed_seconds": 0.03437339500010239,
+      "current_cost": 58779.66470346111,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 57,
+      "evaluations": 855,
+      "elapsed_seconds": 0.03494894999994358,
+      "current_cost": 59206.51900153696,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 58,
+      "evaluations": 870,
+      "elapsed_seconds": 0.03556424499993227,
+      "current_cost": 58708.71593760264,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 59,
+      "evaluations": 885,
+      "elapsed_seconds": 0.03616598000007798,
+      "current_cost": 60463.290729341985,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 60,
+      "evaluations": 900,
+      "elapsed_seconds": 0.03678511099997195,
+      "current_cost": 61235.65277329046,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 61,
+      "evaluations": 915,
+      "elapsed_seconds": 0.03738860799990107,
+      "current_cost": 57286.167686702116,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 62,
+      "evaluations": 930,
+      "elapsed_seconds": 0.037984024000024874,
+      "current_cost": 57883.26546433026,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 63,
+      "evaluations": 945,
+      "elapsed_seconds": 0.03859606400010307,
+      "current_cost": 56545.49493325789,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 64,
+      "evaluations": 960,
+      "elapsed_seconds": 0.03924120400006359,
+      "current_cost": 57377.34544028614,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 65,
+      "evaluations": 975,
+      "elapsed_seconds": 0.03986236800005827,
+      "current_cost": 59101.08206179353,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 66,
+      "evaluations": 990,
+      "elapsed_seconds": 0.040558265000072424,
+      "current_cost": 57298.88466088592,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 67,
+      "evaluations": 1005,
+      "elapsed_seconds": 0.04115787599994292,
+      "current_cost": 56076.1755899791,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 68,
+      "evaluations": 1020,
+      "elapsed_seconds": 0.04179870000007213,
+      "current_cost": 58096.0799142274,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 69,
+      "evaluations": 1035,
+      "elapsed_seconds": 0.042486393999979555,
+      "current_cost": 56683.40339804173,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 70,
+      "evaluations": 1050,
+      "elapsed_seconds": 0.04314362200011601,
+      "current_cost": 57507.53042903806,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 71,
+      "evaluations": 1065,
+      "elapsed_seconds": 0.04383698500009814,
+      "current_cost": 57289.90273116407,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 72,
+      "evaluations": 1080,
+      "elapsed_seconds": 0.04448517900004845,
+      "current_cost": 58612.28372756,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 73,
+      "evaluations": 1095,
+      "elapsed_seconds": 0.045074005000060424,
+      "current_cost": 58995.75194848504,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 74,
+      "evaluations": 1110,
+      "elapsed_seconds": 0.04568649599991659,
+      "current_cost": 55868.37812518029,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 75,
+      "evaluations": 1125,
+      "elapsed_seconds": 0.046281279999902836,
+      "current_cost": 56983.714755613466,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 76,
+      "evaluations": 1140,
+      "elapsed_seconds": 0.04685962999997173,
+      "current_cost": 57262.57829973371,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 77,
+      "evaluations": 1155,
+      "elapsed_seconds": 0.04747224099992309,
+      "current_cost": 57841.93888641654,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 78,
+      "evaluations": 1170,
+      "elapsed_seconds": 0.04805301400006101,
+      "current_cost": 55891.70642587109,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 79,
+      "evaluations": 1185,
+      "elapsed_seconds": 0.04866473400011273,
+      "current_cost": 58027.42272451286,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 80,
+      "evaluations": 1200,
+      "elapsed_seconds": 0.04924881200008713,
+      "current_cost": 55813.282224084614,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 81,
+      "evaluations": 1215,
+      "elapsed_seconds": 0.04984234500011553,
+      "current_cost": 58087.91596405559,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 82,
+      "evaluations": 1230,
+      "elapsed_seconds": 0.050439623000102074,
+      "current_cost": 59880.89776803874,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 83,
+      "evaluations": 1245,
+      "elapsed_seconds": 0.05110488300010729,
+      "current_cost": 60020.99922049028,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 84,
+      "evaluations": 1260,
+      "elapsed_seconds": 0.05178092000005563,
+      "current_cost": 59365.70775256064,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 85,
+      "evaluations": 1275,
+      "elapsed_seconds": 0.052423216000079265,
+      "current_cost": 60738.70484168944,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 86,
+      "evaluations": 1290,
+      "elapsed_seconds": 0.05301068900007522,
+      "current_cost": 59763.93121418991,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 87,
+      "evaluations": 1305,
+      "elapsed_seconds": 0.05363233399998535,
+      "current_cost": 56962.16850240246,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 88,
+      "evaluations": 1320,
+      "elapsed_seconds": 0.054231874999914,
+      "current_cost": 58237.357156174025,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 89,
+      "evaluations": 1335,
+      "elapsed_seconds": 0.05483691499989618,
+      "current_cost": 57787.35419762307,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 90,
+      "evaluations": 1350,
+      "elapsed_seconds": 0.055431639000062205,
+      "current_cost": 57632.9818183459,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 91,
+      "evaluations": 1365,
+      "elapsed_seconds": 0.056022568000116735,
+      "current_cost": 57667.53808266285,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 92,
+      "evaluations": 1380,
+      "elapsed_seconds": 0.05672920000006343,
+      "current_cost": 56277.91875408747,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 93,
+      "evaluations": 1395,
+      "elapsed_seconds": 0.057334058999913395,
+      "current_cost": 56219.340670115635,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 94,
+      "evaluations": 1410,
+      "elapsed_seconds": 0.057911628000056226,
+      "current_cost": 57629.38647711422,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 95,
+      "evaluations": 1425,
+      "elapsed_seconds": 0.05850461899990478,
+      "current_cost": 61730.797272455355,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 96,
+      "evaluations": 1440,
+      "elapsed_seconds": 0.05909211299990602,
+      "current_cost": 60410.4074330887,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 97,
+      "evaluations": 1455,
+      "elapsed_seconds": 0.059696951999967496,
+      "current_cost": 57858.270729015814,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 98,
+      "evaluations": 1470,
+      "elapsed_seconds": 0.060303534000013315,
+      "current_cost": 58340.24690018819,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 99,
+      "evaluations": 1485,
+      "elapsed_seconds": 0.060889404999898034,
+      "current_cost": 57849.23841669825,
+      "best_cost": 55625.84275154893
+    },
+    {
+      "iteration": 100,
+      "evaluations": 1500,
+      "elapsed_seconds": 0.06148653300010665,
+      "current_cost": 59552.842399469584,
+      "best_cost": 55625.84275154893
+    }
+  ],
+  "error": null
+}

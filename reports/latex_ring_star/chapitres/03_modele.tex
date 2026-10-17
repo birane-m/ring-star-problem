@@ -1,0 +1,88 @@
+\chapter{Modèle mathématique et difficulté du problème}
+\section{Une solution sous forme d'anneau et d'affectations}
+Soit $V=\{1,\ldots,n\}$ l'ensemble des points et $r\in V$ le sommet imposé.
+Pour des coordonnées $(x_i,y_i)$, le projet définit
+\begin{equation}
+d_{ij}=\sqrt{(x_i-x_j)^2+(y_i-y_j)^2}.
+\end{equation}
+Ces distances sont symétriques, positives ou nulles, et non arrondies. Le graphe
+est complet : une arête peut relier n'importe quelle paire de points.
+
+Une solution est un triplet $(S,\pi,a)$. L'ensemble $S\subseteq V$ contient les
+$p$ stations et vérifie $r\in S$. Le vecteur $\pi=(\pi_1,\ldots,\pi_p)$ est une
+permutation de $S$, qui définit les arêtes du cycle en posant $\pi_{p+1}=\pi_1$.
+L'affectation $a(i)\in S$ associe chaque point à une station, avec $a(i)=i$
+pour les stations.
+
+Le cycle est \emph{simple au sens combinatoire} : aucune station n'est répétée
+dans la permutation. Cette propriété n'interdit pas, à elle seule, un croisement
+géométrique de deux segments. Le recours à 2-opt améliore le parcours euclidien,
+sans ajouter explicitement une contrainte géométrique d'absence de croisement.
+
+\section{Fonction objectif et affectation optimale à stations fixées}
+Les deux composantes sont
+\begin{equation}
+L(S,\pi)=\sum_{k=1}^{p}d_{\pi_k,\pi_{k+1}},\qquad
+A(S,a)=\sum_{i\in V}d_{i,a(i)}.
+\end{equation}
+Le problème minimise
+\begin{equation}\label{eq:objectif}
+C(S,\pi,a)=\alpha L(S,\pi)+A(S,a).
+\end{equation}
+Les stations contribuent zéro à $A$, puisqu'elles s'affectent à elles-mêmes.
+La longueur $L$ est comptée une seule fois sur le cycle fermé. Il ne s'agit pas
+de la somme des trajets en transport de tous les voyageurs : aucun couple
+origine-destination n'est modélisé.
+
+Lorsque $S$ est fixé, les affectations sont indépendantes les unes des autres.
+Il n'existe ni capacité de station ni quota d'usagers. On peut donc choisir
+\begin{equation}
+a(i)\in\mathop{\mathrm{arg\,min}}_{s\in S}d_{is},\qquad
+A(S)=\sum_{i\in V}\min_{s\in S}d_{is}.
+\end{equation}
+Toute affectation plus lointaine peut être remplacée par une plus proche sans
+modifier l'anneau et sans augmenter le coût. Les heuristiques exploitent cette
+propriété à chaque échange de stations. En cas d'égalité de distance, elles
+choisissent le plus petit indice pour rendre la décision déterministe.
+
+\section{Deux problèmes classiques intégrés}
+La sélection des stations rappelle le problème du $p$-médian, qui minimise la
+somme des distances d'accès. Une fois les stations fixées, la recherche du
+meilleur ordre de visite est un problème du voyageur de commerce sur $S$.
+L'intégration vient du fait que choisir $S$ en ne regardant que les accès peut
+produire un anneau coûteux. La meilleure sélection dépend donc de $\alpha$.
+
+Pour $\alpha=0$, seul le coût d'accès intervient. Le problème devient un
+$p$-médian avec un centre imposé ; le cycle reste requis pour la représentation,
+mais son ordre n'influe plus sur l'objectif. Pour $p=n$, toutes les affectations
+ont un coût nul. Si $\alpha>0$, il ne reste que le choix du cycle.
+
+Une augmentation de $\alpha$ renchérit toute solution fixée dont l'anneau est
+non nul, mais peut aussi conduire à sélectionner d'autres stations. De même,
+augmenter $p$ ne garantit pas une diminution du coût total : une meilleure
+couverture et une ligne plus longue peuvent se compenser. Les graphiques selon
+$p$ doivent ainsi être lus comme des compromis, et non comme une courbe de
+performance qui devrait forcément décroître.
+
+\section{Justification de la NP-difficulté}
+Considérons une instance du voyageur de commerce euclidien symétrique à $n$
+points, avec $n\geq3$. Construisons une instance Ring-Star ayant les mêmes points,
+les mêmes distances, $p=n$, $\alpha=1$ et un sommet imposé quelconque.
+Cette transformation demande un temps polynomial.
+
+Comme exactement $n$ stations sont requises, tous les points sont sélectionnés.
+Le coût des affectations est nul et le coût Ring-Star est exactement la longueur
+du cycle hamiltonien. Le sommet imposé ne retire aucune solution, puisque tout
+cycle hamiltonien visite tous les sommets. Une résolution optimale du Ring-Star
+donnerait donc une résolution optimale du voyageur de commerce euclidien.
+Ce dernier étant NP-difficile, le problème Ring-Star général l'est également.
+
+Cette réduction porte sur un cas particulier autorisé, avec $\alpha=1$.
+Elle ne dit pas que chaque instance est difficile ni que le cas dégénéré
+$\alpha=0$, $p=n$ l'est. Elle justifie le recours aux heuristiques et la nécessité
+de limiter certaines résolutions exactes. Il suffit ici d'établir la
+NP-difficulté ; aucune affirmation supplémentaire sur l'appartenance à NP avec
+des distances euclidiennes exactes n'est nécessaire.
+\bilan{Le coût combine deux décisions liées. Les affectations sont simples à
+optimiser lorsque les stations sont fixées, mais la sélection des stations et
+l'ordre de leur cycle rendent le problème combinatoire.}

@@ -1,0 +1,11 @@
+{
+  "pdf_pages": 39,
+  "latex_overfull_boxes": 0,
+  "latex_unresolved_references": 0,
+  "rendered_pages_reviewed": 39,
+  "campaign_solutions_checked": 172,
+  "individual_initial_and_final_costs_recomputed": true,
+  "tests_passed": 101,
+  "original_regression_test_reproduces_missing_csv": true,
+  "patch_apply_check_passed": true
+}

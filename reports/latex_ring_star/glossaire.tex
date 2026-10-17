@@ -1,0 +1,60 @@
+\chapter*{Glossaire}
+\addcontentsline{toc}{chapter}{Glossaire}
+\begin{description}
+\item[Affectation] Rattachement d'un point à une station ouverte. À stations
+fixées et sans capacité, une station la plus proche minimise son coût d'accès.
+\item[Anneau] Cycle qui relie toutes les stations sélectionnées et revient
+à son point de départ.
+\item[Aspiration] Règle qui autorise un mouvement tabou lorsqu'il améliore
+la meilleure valeur globale rencontrée.
+\item[Borne inférieure] Valeur qui ne dépasse pas l'optimum d'un problème
+de minimisation. Sa comparaison à une solution réalisable renseigne
+sur l'incertitude d'optimalité.
+\item[Campagne] Ensemble d'exécutions décrites par une configuration commune,
+avec plusieurs instances, cardinalités, méthodes et éventuellement graines.
+\item[Cas expérimental] Problème fixé par l'instance, $p$ et $\alpha$.
+Une méthode peut y être exécutée sur plusieurs graines.
+\item[CBC] Solveur de programmation entière du projet COIN-OR,
+appelé ici à travers PuLP.
+\item[Construction] Méthode rapide produisant une première solution réalisable.
+Dans le projet : grille, ajustement de cardinalité, affectation, plus proche
+voisin et 2-opt.
+\item[Écart-type d'échantillon] Mesure descriptive de la dispersion des coûts
+entre graines, calculée avec le dénominateur $m-1$.
+\item[Évaluation] Reconstruction et calcul du coût d'un voisin candidat.
+Une itération peut en contenir plusieurs.
+\item[Flot de connexité] Quantité fictive envoyée depuis la racine pour imposer
+que toutes les stations appartiennent à une même composante.
+\item[Formulation compacte] Modèle dont le nombre de variables et de contraintes
+est polynomial en la taille des données ; cette propriété ne rend pas
+sa résolution entière nécessairement rapide.
+\item[Graine] Valeur qui initialise le générateur pseudo-aléatoire et permet
+de reproduire une suite de tirages dans un contexte logiciel donné.
+\item[Heuristique] Méthode qui cherche une bonne solution sans garantir
+qu'elle soit optimale.
+\item[Itération] Étape de la recherche. Dans la campagne, la locale évalue
+un voisin par étape et le tabou jusqu'à 15.
+\item[Métaheuristique] Stratégie générale d'exploration qui organise les
+mouvements, la mémoire et les règles d'acceptation d'une recherche.
+\item[NP-difficulté] Propriété qui traduit ici l'inclusion d'un problème
+combinatoire difficile comme cas particulier. Elle n'implique pas que
+toutes les instances soient difficiles en pratique.
+\item[Optimum prouvé] Solution dont le statut du solveur établit l'optimalité,
+sous les tolérances numériques utilisées.
+\item[PLNE] Programmation linéaire en nombres entiers. Le modèle du rapport
+est mixte, car les flots sont continus et les décisions sont binaires.
+\item[PuLP] Bibliothèque Python de construction de modèles linéaires et
+entiers et d'interface avec des solveurs.
+\item[Recherche locale] Exploration d'un voisinage en retenant des améliorations.
+La version du projet échantillonne un échange à chaque itération.
+\item[Recherche tabou] Recherche avec mémoire temporaire de certains retours,
+qui peut accepter une dégradation et conserve la meilleure solution visitée.
+\item[Solution réalisable] Solution qui respecte toutes les contraintes,
+quelle que soit sa qualité de coût.
+\item[TSPLIB] Bibliothèque d'instances de problèmes de tournées. Le projet
+en réutilise les coordonnées sous sa propre convention de distance.
+\item[Voisinage] Ensemble des solutions accessibles par une règle de mouvement,
+ici le retrait d'une station non imposée et l'ajout d'un autre point.
+\item[2-opt] Amélioration du cycle par suppression de deux arêtes et inversion
+du segment intermédiaire afin de réduire la longueur.
+\end{description}

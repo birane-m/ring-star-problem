@@ -1,0 +1,493 @@
+{
+  "instance": "berlin52",
+  "n": 52,
+  "p": 10,
+  "alpha": 1.0,
+  "method": "greedy",
+  "edge_weight_type": "EUC_2D",
+  "required_station": 1,
+  "stations": [
+    1,
+    4,
+    10,
+    11,
+    13,
+    28,
+    29,
+    33,
+    42,
+    47
+  ],
+  "cycle": [
+    1,
+    42,
+    29,
+    47,
+    13,
+    28,
+    11,
+    33,
+    10,
+    4
+  ],
+  "assignments": [
+    {
+      "point": 1,
+      "station": 1
+    },
+    {
+      "point": 2,
+      "station": 42
+    },
+    {
+      "point": 3,
+      "station": 1
+    },
+    {
+      "point": 4,
+      "station": 4
+    },
+    {
+      "point": 5,
+      "station": 4
+    },
+    {
+      "point": 6,
+      "station": 4
+    },
+    {
+      "point": 7,
+      "station": 42
+    },
+    {
+      "point": 8,
+      "station": 10
+    },
+    {
+      "point": 9,
+      "station": 10
+    },
+    {
+      "point": 10,
+      "station": 10
+    },
+    {
+      "point": 11,
+      "station": 11
+    },
+    {
+      "point": 12,
+      "station": 28
+    },
+    {
+      "point": 13,
+      "station": 13
+    },
+    {
+      "point": 14,
+      "station": 13
+    },
+    {
+      "point": 15,
+      "station": 4
+    },
+    {
+      "point": 16,
+      "station": 29
+    },
+    {
+      "point": 17,
+      "station": 42
+    },
+    {
+      "point": 18,
+      "station": 1
+    },
+    {
+      "point": 19,
+      "station": 10
+    },
+    {
+      "point": 20,
+      "station": 1
+    },
+    {
+      "point": 21,
+      "station": 1
+    },
+    {
+      "point": 22,
+      "station": 1
+    },
+    {
+      "point": 23,
+      "station": 1
+    },
+    {
+      "point": 24,
+      "station": 4
+    },
+    {
+      "point": 25,
+      "station": 4
+    },
+    {
+      "point": 26,
+      "station": 28
+    },
+    {
+      "point": 27,
+      "station": 28
+    },
+    {
+      "point": 28,
+      "station": 28
+    },
+    {
+      "point": 29,
+      "station": 29
+    },
+    {
+      "point": 30,
+      "station": 29
+    },
+    {
+      "point": 31,
+      "station": 1
+    },
+    {
+      "point": 32,
+      "station": 1
+    },
+    {
+      "point": 33,
+      "station": 33
+    },
+    {
+      "point": 34,
+      "station": 1
+    },
+    {
+      "point": 35,
+      "station": 1
+    },
+    {
+      "point": 36,
+      "station": 1
+    },
+    {
+      "point": 37,
+      "station": 4
+    },
+    {
+      "point": 38,
+      "station": 4
+    },
+    {
+      "point": 39,
+      "station": 1
+    },
+    {
+      "point": 40,
+      "station": 4
+    },
+    {
+      "point": 41,
+      "station": 10
+    },
+    {
+      "point": 42,
+      "station": 42
+    },
+    {
+      "point": 43,
+      "station": 4
+    },
+    {
+      "point": 44,
+      "station": 1
+    },
+    {
+      "point": 45,
+      "station": 1
+    },
+    {
+      "point": 46,
+      "station": 4
+    },
+    {
+      "point": 47,
+      "station": 47
+    },
+    {
+      "point": 48,
+      "station": 4
+    },
+    {
+      "point": 49,
+      "station": 1
+    },
+    {
+      "point": 50,
+      "station": 29
+    },
+    {
+      "point": 51,
+      "station": 11
+    },
+    {
+      "point": 52,
+      "station": 13
+    }
+  ],
+  "costs": {
+    "metro": 4831.476717765215,
+    "walking": 7324.09541444827,
+    "total": 12155.572132213485
+  },
+  "plot": "figures/solution.png",
+  "schema_version": 2,
+  "problem": {
+    "name": "berlin52",
+    "points": [
+      [
+        565.0,
+        575.0
+      ],
+      [
+        25.0,
+        185.0
+      ],
+      [
+        345.0,
+        750.0
+      ],
+      [
+        945.0,
+        685.0
+      ],
+      [
+        845.0,
+        655.0
+      ],
+      [
+        880.0,
+        660.0
+      ],
+      [
+        25.0,
+        230.0
+      ],
+      [
+        525.0,
+        1000.0
+      ],
+      [
+        580.0,
+        1175.0
+      ],
+      [
+        650.0,
+        1130.0
+      ],
+      [
+        1605.0,
+        620.0
+      ],
+      [
+        1220.0,
+        580.0
+      ],
+      [
+        1465.0,
+        200.0
+      ],
+      [
+        1530.0,
+        5.0
+      ],
+      [
+        845.0,
+        680.0
+      ],
+      [
+        725.0,
+        370.0
+      ],
+      [
+        145.0,
+        665.0
+      ],
+      [
+        415.0,
+        635.0
+      ],
+      [
+        510.0,
+        875.0
+      ],
+      [
+        560.0,
+        365.0
+      ],
+      [
+        300.0,
+        465.0
+      ],
+      [
+        520.0,
+        585.0
+      ],
+      [
+        480.0,
+        415.0
+      ],
+      [
+        835.0,
+        625.0
+      ],
+      [
+        975.0,
+        580.0
+      ],
+      [
+        1215.0,
+        245.0
+      ],
+      [
+        1320.0,
+        315.0
+      ],
+      [
+        1250.0,
+        400.0
+      ],
+      [
+        660.0,
+        180.0
+      ],
+      [
+        410.0,
+        250.0
+      ],
+      [
+        420.0,
+        555.0
+      ],
+      [
+        575.0,
+        665.0
+      ],
+      [
+        1150.0,
+        1160.0
+      ],
+      [
+        700.0,
+        580.0
+      ],
+      [
+        685.0,
+        595.0
+      ],
+      [
+        685.0,
+        610.0
+      ],
+      [
+        770.0,
+        610.0
+      ],
+      [
+        795.0,
+        645.0
+      ],
+      [
+        720.0,
+        635.0
+      ],
+      [
+        760.0,
+        650.0
+      ],
+      [
+        475.0,
+        960.0
+      ],
+      [
+        95.0,
+        260.0
+      ],
+      [
+        875.0,
+        920.0
+      ],
+      [
+        700.0,
+        500.0
+      ],
+      [
+        555.0,
+        815.0
+      ],
+      [
+        830.0,
+        485.0
+      ],
+      [
+        1170.0,
+        65.0
+      ],
+      [
+        830.0,
+        610.0
+      ],
+      [
+        605.0,
+        625.0
+      ],
+      [
+        595.0,
+        360.0
+      ],
+      [
+        1340.0,
+        725.0
+      ],
+      [
+        1740.0,
+        245.0
+      ]
+    ],
+    "required_station": 0,
+    "edge_weight_type": "EUC_2D",
+    "distance_metric": "euclidean_unrounded",
+    "p": 10,
+    "alpha": 1.0
+  },
+  "configuration": {
+    "method": "greedy",
+    "seed": 0,
+    "iterations": null,
+    "tabu_tenure": 10,
+    "candidates_per_iteration": 15,
+    "time_limit": null,
+    "search_time_limit": null
+  },
+  "status": "ok",
+  "elapsed_seconds": 0.0009235790000730049,
+  "optimal": false,
+  "lower_bound": null,
+  "relative_gap": null,
+  "details": {},
+  "history": [
+    {
+      "iteration": 0,
+      "evaluations": 0,
+      "elapsed_seconds": 0.0,
+      "current_cost": 12155.572132213485,
+      "best_cost": 12155.572132213485
+    }
+  ],
+  "error": null
+}

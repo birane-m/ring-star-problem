@@ -1,0 +1,59 @@
+\renewcommand{\bibname}{Références}
+\begin{thebibliography}{9}
+\addcontentsline{toc}{chapter}{Références}
+\bibitem{enonce}
+Sup Galilée, Université Sorbonne Paris Nord.
+\textit{SAÉ Optimisation 2025-2026 : Autour du tracé d'un métro circulaire}.
+Énoncé fourni avec le projet, dix pages ; copie dans
+\code{documents/enonce_sae.pdf}. Le périmètre, les hypothèses géométriques
+et les objectifs pédagogiques du rapport s'appuient sur ce document.
+
+\bibitem{labbe}
+M. Labbé, G. Laporte, I. R. Martín et J. J. Salazar González.
+\textit{The Ring Star Problem: Polyhedral Analysis and Exact Algorithm}.
+Networks, 43(3), 177-189, 2004. Référence fondatrice indiquée dans
+l'énoncé ; le modèle à flot présenté ici décrit l'implémentation du projet,
+et non une reproduction revendiquée de l'algorithme de cet article.
+
+\bibitem{figure}
+A. Liefooghe, L. Jourdan et E.-G. Talbi.
+\textit{Metaheuristics and Their Hybridization to Solve the Bi-objective Ring
+Star Problem: a Comparative Study}, 2008.
+Illustration « An example of solution for the ring star problem »,
+figure diffusée sur
+\href{https://www.researchgate.net/figure/An-example-of-solution-for-the-ring-star-problem_fig2_1920886}{researchgate.net}.
+Page consultée le 17 octobre 2026. Image de couverture fournie pour le rapport ;
+la conversion de WebP en PNG ne modifie ni le tracé ni le cadrage.
+Cette référence illustre la structure anneau-étoile, sans constituer une
+source des résultats numériques du projet.
+
+\bibitem{tsplib}
+G. Reinelt, Université de Heidelberg.
+\textit{TSPLIB 95}, page officielle et documentation des instances.
+\url{https://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/}.
+Consultée le 17 octobre 2026. Les huit fichiers de coordonnées utilisés
+sont archivés avec les sources du rapport ; les distances du projet
+sont euclidiennes non arrondies, indépendamment du type source.
+
+\bibitem{pulp}
+COIN-OR. \textit{PuLP : documentation et constantes de statut}.
+\url{https://coin-or.github.io/pulp/technical/constants.html}.
+Consultée le 17 octobre 2026. La version utilisée dans les calculs
+archivés est PuLP 3.3.2 ; les métadonnées d'exécution font foi pour
+cette version, indépendamment de l'évolution du site documentaire.
+
+\bibitem{cbc}
+COIN-OR. \textit{Introduction to CBC}.
+\url{https://coin-or.github.io/Cbc/intro.html}.
+Consultée le 17 octobre 2026. Présentation du solveur de programmation
+entière utilisé par le projet.
+
+\bibitem{projet}
+\textit{Ring-Star Problem : code, tests et résultats enregistrés}.
+Dépôt \href{https://github.com/birane-m/ring-star-problem}{birane-m/ring-star-problem},
+état publié au commit \code{8761003}, 17 octobre 2026.
+Campagne \code{demo_multi_graines} et exécution individuelle att48 du même jour.
+Les données de calcul, l'empreinte des sources expérimentales et les
+contrôles de rédaction sont inclus dans \code{resultats/}.
+Le correctif d'export joint est identifié séparément.
+\end{thebibliography}

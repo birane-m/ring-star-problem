@@ -1,0 +1,91 @@
+% Préambule du rapport : compilation depuis main.tex.
+% Les textes de couverture et les couleurs peuvent être modifiés ci-dessous.
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\IfFileExists{french.ldf}{%
+  \usepackage[french]{babel}
+}{%
+  \usepackage{babel}
+  \babelprovide[main,import]{french}
+}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,left=23mm,right=23mm,top=25mm,bottom=21mm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,array,longtable}
+\usepackage{ragged2e}
+\usepackage{caption}
+\usepackage{placeins}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{hyperref}
+\usepackage{xurl}
+\setlength{\parindent}{0pt}
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+
+\definecolor{anthracite}{HTML}{252728}
+\definecolor{terreCuite}{HTML}{A5553E}
+\definecolor{grisTexte}{HTML}{62666A}
+\definecolor{grisCredit}{HTML}{7B7E81}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcommand{\nomChapitre}{CHAPITRE}
+\newcommand{\code}[1]{{\ttfamily\small\expandafter\nolinkurl\expandafter{\detokenize{#1}}}}
+\newcommand{\sourcecalcul}[1]{\par\vspace{2pt}{\footnotesize\color{grisTexte}Source : #1.\par}}
+\newcommand{\bilan}[1]{\par\medskip\noindent{\sffamily\bfseries À retenir. }#1\par}
+\captionsetup{font=small,labelfont=bf,skip=7pt,justification=raggedright,singlelinecheck=false}
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Tableau}
+\setlength{\textfloatsep}{14pt plus 3pt minus 2pt}
+\setlength{\intextsep}{12pt plus 3pt minus 2pt}
+\setlength{\floatsep}{12pt plus 3pt minus 2pt}
+\renewcommand{\topfraction}{0.90}
+\renewcommand{\bottomfraction}{0.80}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.72}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\titleformat{\chapter}[display]
+  {\sffamily\bfseries\raggedright\color{anthracite}}
+  {\color{terreCuite}\fontsize{11}{14}\selectfont \nomChapitre\ \thechapter}
+  {8pt}{\fontsize{24}{29}\selectfont}
+  [\vspace{3mm}{\color{terreCuite}\rule{18mm}{1.2pt}}]
+\titlespacing*{\chapter}{0pt}{0pt}{17pt}
+\titleformat{\section}{\sffamily\large\bfseries\color{anthracite}}{\thesection}{0.7em}{}
+\titlespacing*{\section}{0pt}{15pt}{7pt}
+\titleformat{\subsection}{\sffamily\normalsize\bfseries\color{anthracite}}{\thesubsection}{0.7em}{}
+\titlespacing*{\subsection}{0pt}{10pt}{5pt}
+\titleformat{\part}[display]{\centering\sffamily\bfseries\color{anthracite}}
+  {\color{terreCuite}\Large PARTIE \thepart}{18pt}{\fontsize{27}{34}\selectfont}
+
+\newcommand{\titreRapport}{Ring-Star :\\concevoir une ligne\\de transport circulaire}
+\newcommand{\sousTitreRapport}{Modélisation mathématique, heuristiques\\et comparaison expérimentale}
+\newcommand{\perimetreRapport}{Recherche opérationnelle\enspace\(\cdot\)\enspace Huit instances de 16 à 100 points}
+\newcommand{\auteurRapport}{Papa Birane Mbengue}
+\newcommand{\formationRapport}{Élève ingénieur en informatique - Sup Galilée}
+\newcommand{\dateRapport}{Octobre 2026}
+\newcommand{\imageCouverture}{figures/couverture_ring_star.png}
+\newcommand{\creditPhoto}{Source : researchgate.net ; illustration de Liefooghe, Jourdan et Talbi (2008).}
+
+\hypersetup{
+  pdftitle={Ring-Star : concevoir une ligne de transport circulaire},
+  pdfauthor={Papa Birane Mbengue},
+  pdfsubject={Modélisation mathématique et comparaison des méthodes de résolution du Ring-Star},
+  hidelinks
+}
+
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{commandes}{Verbatim}{fontsize=\small,breaklines=true,breakanywhere=true}
+\newcommand{\figureRS}[4][0.98]{%
+  \begin{figure}[htbp]\centering
+  \includegraphics[width=#1\textwidth]{figures/#2}
+  \caption{#3}\label{#4}
+  \sourcecalcul{exécutions enregistrées du projet Ring-Star, campagne du 17 octobre 2026.}
+  \end{figure}%
+}
+\newcommand{\sourcetable}{\sourcecalcul{exports JSON et CSV de la campagne de démonstration ; tableaux régénérés sans relancer les solveurs.}}
+\newcommand{\exigence}[2]{\textbf{#1.} #2\par}

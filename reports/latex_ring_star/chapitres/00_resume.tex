@@ -1,0 +1,47 @@
+Ce projet étudie le choix des stations et le tracé d'une ligne de transport circulaire
+au moyen du problème Ring-Star, ou anneau-étoile. Parmi $n$ points candidats,
+exactement $p$ deviennent des stations, dont un sommet imposé. Les stations sont
+reliées par un cycle unique et chaque autre point est affecté à une station.
+Le coût additionne la longueur du cycle, pondérée par $\alpha$, et les distances
+d'accès aux stations. Le modèle représente une décision de localisation et de
+routage ; il ne constitue pas une étude opérationnelle d'un réseau de transport réel.
+
+Le travail reprend l'énoncé de la SAÉ Optimisation de Sup Galilée et en explicite
+les hypothèses. Lorsque $p=n$ et $\alpha>0$, le problème contient le voyageur de
+commerce euclidien comme cas particulier, ce qui établit sa NP-difficulté.
+La résolution exacte repose sur une programmation linéaire en nombres entiers
+avec des variables d'affectation, des arêtes d'anneau et un flot assurant la
+connexité. Le modèle est construit avec PuLP et résolu par CBC.
+
+Trois méthodes approchées complètent cette formulation. Une construction
+déterministe choisit les stations à partir d'une grille, affecte les points à leur
+station la plus proche et construit un cycle par plus proche voisin, amélioré
+par 2-opt. Une recherche locale accepte les échanges de stations améliorants.
+Une recherche tabou peut accepter une dégradation temporaire, interdit certains
+retours et conserve la meilleure solution rencontrée.
+
+L'évaluation principale porte sur huit nuages de points issus de TSPLIB, de 16 à
+100 sommets, avec $p\in\{3,5,10\}$ et $\alpha=1$. Les deux recherches sont répétées
+sur trois graines. Le protocole compte 192 cas de méthode et de graine :
+168 exécutions heuristiques, quatre résolutions PLNE et 20 cas PLNE ignorés
+par les limites de taille configurées. Sur les quatre PLNE exécutés, trois
+aboutissent à une preuve d'optimalité et un fournit une solution réalisable
+sans preuve dans le budget de cinq secondes.
+
+Les gains médians de coût face à la construction sont de 11,79\,\% pour la
+recherche locale et de 13,67\,\% pour la recherche tabou, en donnant le même poids
+à chacun des 24 cas d'instance et de cardinalité. La moyenne tabou est inférieure
+à la moyenne locale dans 22 cas et égale dans deux cas. Ce constat est lié au
+protocole : une itération tabou évalue jusqu'à 15 échanges, contre un seul pour
+la recherche locale. Il ne démontre donc pas une supériorité à effort de calcul égal.
+
+L'étude détaillée d'\code{att48}, avec dix stations, illustre une baisse du coût
+de 48\,833,89 à 42\,743,75, soit 12,47\,\%. La reproductibilité repose sur la
+conservation des coordonnées, des paramètres, des solutions, des traces et des
+versions logicielles. Les 172 solutions de la campagne ont été relues et leurs
+coûts recalculés pour le rapport. La suite de 101 tests passe également avec
+un contrôle renforcé de l'export des cas ignorés.
+
+\vspace{3mm}
+{\sffamily\small\raggedright\textbf{Mots-clés :} recherche opérationnelle, Ring-Star,
+localisation-routage, PLNE, recherche tabou, expérimentation reproductible.\par}

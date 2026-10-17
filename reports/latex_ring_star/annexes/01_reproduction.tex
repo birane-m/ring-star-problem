@@ -1,0 +1,95 @@
+\chapter{Fichiers, commandes et reproduction}
+\section{Installer le projet et vérifier son fonctionnement}
+Les commandes suivantes sont à lancer sous Linux depuis la racine du
+dépôt. Python 3.10 ou plus récent est déclaré compatible. Les contrôles
+décrits dans le rapport ont été exécutés sous Python 3.12. La matrice CI
+du dépôt prévoit Python 3.10 et 3.12 ; le rapport ne suppose pas que
+l'exécution distante de cette CI a déjà été observée.
+\begin{commandes}
+git clone https://github.com/birane-m/ring-star-problem.git
+cd ring-star-problem
+make install
+make test
+\end{commandes}
+Les dépendances sont définies dans \code{pyproject.toml}. Le fichier
+\code{requirements.txt} installe le projet en mode éditable et ne
+constitue pas une seconde liste indépendante. Les versions de l'exécution
+archivée se trouvent dans \code{resultats/campagne/environment.json}.
+
+\section{Reproduire une résolution et une campagne}
+L'exemple individuel att48 est paramétré par :
+\begin{commandes}
+make tabu INSTANCE=data/instances/att48.tsp P=10 ALPHA=1 \
+  SEED=0 ITERATIONS=100 CANDIDATES=15 TENURE=10
+\end{commandes}
+L'interface explicite permet aussi de fixer tous les paramètres :
+\begin{commandes}
+.venv/bin/ring-star run tabu data/instances/att48.tsp 10 \
+  --alpha 1 --seed 0 --iterations 100 \
+  --candidates-per-iteration 15 --tabu-tenure 10
+\end{commandes}
+La campagne de démonstration se lance avec :
+\begin{commandes}
+make benchmark
+\end{commandes}
+Elle lit \code{configs/benchmark_demo.json}. Une relance crée un nouveau
+dossier horodaté. Les durées, et éventuellement le comportement de CBC
+au voisinage du temps limite, peuvent varier. Pour retrouver exactement
+les chiffres de ce rapport, utiliser les résultats archivés plutôt que
+supposer l'identité des durées d'une nouvelle exécution.
+
+\section{Retrouver les sorties}
+\begin{table}[htbp]\small
+\begin{tabularx}{\textwidth}{lL}\toprule
+Fichier ou dossier & Rôle \\\midrule
+\code{outputs/index.md} & Point d'entrée vers les exécutions et campagnes. \\
+\code{summary.md} & Lecture d'une résolution, de ses coûts et de ses figures. \\
+\code{solution.json} & Coordonnées, solution, paramètres, coûts et statut. \\
+\code{initial_solution.json} & Référence initiale d'une recherche. \\
+\code{history.csv} & Coûts courant et meilleur, évaluations et temps de recherche. \\
+\code{runs.csv} & Enregistrements détaillés des méthodes et graines d'une campagne. \\
+\code{summary.csv} & Moyennes, dispersions, statuts et liens aux meilleures graines. \\
+\code{completion.json} & État terminé ou interrompu et compte des enregistrements. \\
+\code{environment.json} & Versions et empreinte des sources. \\
+\code{figures/} & Figures de solution, convergence et comparaison. \\
+\bottomrule\end{tabularx}
+\caption{Repères de navigation dans les sorties du projet.}
+\end{table}
+Les anciens chemins absolus présents dans certains fichiers de provenance
+documentent leur origine. Les solutions contiennent les coordonnées et
+les chemins utiles à la lecture du rapport sont relatifs à ses sources.
+La régénération des tableaux ne dépend pas des anciens chemins absolus.
+
+\section{Compiler le rapport et régénérer les tableaux}
+L'archive des sources est autonome pour la compilation ; elle contient
+les figures utilisées, les tableaux et les résultats qui les alimentent.
+Les paquets LaTeX usuels de mathématiques, de langue française et de
+mise en page sont nécessaires, ainsi que Python 3 pour les contrôles.
+Depuis le dossier contenant \code{main.tex} :
+\begin{commandes}
+python3 scripts/generer_tableaux.py
+latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+\end{commandes}
+Sans \code{latexmk}, compiler \code{main.tex} trois fois avec pdfLaTeX.
+La première commande reconstruit les tableaux, vérifie les coûts des
+172 solutions et documente le rapprochement des 191 lignes originales
+avec les 192 cas attendus. Elle ne lance aucun solveur.
+
+La couverture conserve l'image fournie. Son URL source et ses crédits
+sont rassemblés dans \code{IMAGE_SOURCE.txt}. Les figures de résultats
+reprennent les exports vectoriels de la campagne et de l'exemple individuel.
+
+\section{Intégrer le correctif d'export au dépôt}
+Le fichier \code{correctifs/export_cas_ignores.patch} contient uniquement
+l'écriture finale du CSV et le renforcement du test existant. Après avoir
+placé les sources du rapport dans \code{reports/latex_ring_star/},
+on peut l'appliquer depuis la racine du dépôt :
+\begin{commandes}
+git apply --check \
+  reports/latex_ring_star/correctifs/export_cas_ignores.patch
+git apply \
+  reports/latex_ring_star/correctifs/export_cas_ignores.patch
+make test
+\end{commandes}
+Le correctif reste à intégrer dans un commit distinct ; l'export original
+archivé est conservé.

@@ -1,0 +1,120 @@
+\chapter{Qualité logicielle et limites de l'étude}\label{chap:qualite}
+\section{Séparer les responsabilités du programme}
+Le noyau représente les instances, les paramètres, les solutions et leurs
+règles de validité. Les modules de méthodes construisent ou améliorent des
+solutions. Une couche d'exécution commune mesure les calculs et produit un
+résultat structuré. Les campagnes orchestrent les cas, tandis que les modules
+d'artefacts et de visualisation enregistrent les données et dessinent les figures.
+
+\begin{table}[htbp]\small
+\begin{tabularx}{\textwidth}{lL}\toprule
+Responsabilité & Modules principaux \\\midrule
+Données et modèle & \code{instance}, \code{io}, \code{distances}, \code{solution} \\
+Validité & \code{validation} \\
+Résolution & \code{heuristics}, \code{metaheuristics}, \code{exact} \\
+Exécution et campagnes & \code{execution}, \code{experiments}, \code{benchmark} \\
+Résultats et figures & \code{artifacts}, \code{visualization}, \code{experiment_plots} \\
+Interface & \code{cli}, point d'entrée \code{ring-star} et Makefile \\
+\bottomrule\end{tabularx}
+\caption{Organisation des responsabilités dans le projet.}
+\end{table}
+
+Cette séparation limite les divergences entre une résolution individuelle
+et une campagne : les deux empruntent le même chemin d'exécution. Elle
+évite également de reconstruire une solution approximative à partir d'une
+simple liste de stations lorsqu'un ordre de cycle sauvegardé existe déjà.
+
+\section{Des résultats autonomes et consultables}
+Une exécution sauvegarde les coordonnées, les paramètres, les stations,
+le cycle, les affectations, les coûts et les informations de statut.
+Les recherches ajoutent la solution initiale et une trace. Le journal CBC
+est conservé lorsque cette méthode est utilisée. La campagne fournit un
+CSV détaillé, une synthèse statistique et un résumé de complétion.
+
+Les dossiers utilisent un identifiant unique pour éviter les écrasements.
+L'index global oriente vers les résolutions individuelles et les campagnes,
+puis les résumés guident vers les données et figures pertinentes. Les
+figures peuvent être régénérées depuis les solutions sauvegardées sans
+disposer du fichier TSPLIB initial et sans relancer l'optimisation.
+
+Les exports PNG facilitent la consultation, tandis que les PDF et SVG
+préservent des traits et textes vectoriels pour la rédaction. Les figures
+du présent rapport utilisent des PDF du projet, régénérés depuis la synthèse
+archivée lorsque nécessaire, sans nouvelle optimisation. Le schéma
+de couverture reste l'image fournie par l'auteur, avec son crédit ResearchGate.
+
+\section{Contrôles et tests}
+La suite comprend 101 tests. Elle couvre notamment les paramètres invalides,
+la lecture des coordonnées, les coûts, les contraintes des solutions,
+les méthodes, l'interface, les exports et la disposition des figures.
+Des cas limites vérifient les coordonnées dupliquées, un objectif nul,
+$p=n$ et les arrêts sans échange possible.
+
+Les contrôles les plus utiles sont ceux qui pourraient détecter un résultat
+faux malgré un programme qui s'exécute : comparaison de petites PLNE à une
+énumération indépendante, vérification de 2-opt sur l'arête de fermeture,
+distinction entre solution entière sous budget et optimum prouvé, rejet
+d'un coût sauvegardé incohérent, et relecture des solutions illustrées.
+Les campagnes sont testées avec plusieurs poids pour éviter de fusionner
+des cas différents dans les synthèses.
+
+Les scripts d'archive et de nettoyage sont aussi testés. Ils doivent préserver
+le dépôt Git, l'environnement local et les résultats actuels, et produire
+une archive sans dossier enveloppe superflu. Ces vérifications concernent
+l'usage du projet autant que ses algorithmes.
+
+Pour la rédaction, les 172 solutions de la campagne ont été relues et leurs
+coûts recalculés indépendamment à partir des coordonnées, des cycles et
+des affectations. Les moyennes des tableaux ont été rapprochées des coûts
+unitaires. Le jeu d'essais de 101 tests a été relancé avec le contrôle
+d'export renforcé ; il se termine sans échec dans l'environnement de revue.
+Cela ne garantit pas l'absence de tout défaut ni la compatibilité avec
+toutes les versions possibles des dépendances.
+
+\section{Un défaut d'export identifié pendant la revue}
+Le fichier \code{completion.json} annonce 192 enregistrements et la synthèse
+contient les 96 groupes attendus. Le CSV détaillé original n'en contient que
+191 : il manque le cas \code{rd100}, $p=10$, PLNE, ignoré par configuration.
+Le programme écrivait le CSV après les exécutions calculées, mais pas après
+un dernier cas ignoré. Il s'agit donc d'une écriture finale manquante,
+sans perte de solution calculée.
+
+Le rapport conserve l'export original et produit une copie réconciliée distincte.
+La ligne manquante est reconstituée comme cas ignoré, à partir de la
+configuration, de la synthèse et du bilan de complétion. Aucun coût ni
+temps de résolution n'est inventé pour ce cas. Les sources incluent le
+correctif qui écrit tous les enregistrements à la fin de la campagne,
+ainsi qu'une assertion supplémentaire dans le test existant des cas ignorés.
+Ce correctif est joint pour intégration au dépôt ; il ne fait pas partie
+des trois commits publiés mentionnés au début du rapport.
+
+\section{Limites expérimentales et améliorations prioritaires}
+Trois graines donnent un premier aperçu de la variabilité, mais restent peu
+nombreuses pour quantifier finement la robustesse des recherches. Les petites
+durées sont mesurées une fois par exécution, sans protocole dédié de répétition
+ou d'isolation des ressources. La grille constitue une seule référence
+constructive : un autre départ pourrait modifier les gains.
+
+La priorité expérimentale serait de comparer les recherches à même nombre
+d'évaluations, puis à même budget de temps, avec davantage de graines.
+Il serait ensuite utile de faire varier $\alpha$ et $p$ de façon plus large,
+d'essayer plusieurs initialisations et de mesurer séparément l'accès,
+l'anneau et la distribution des distances individuelles. Une extension de
+la PLNE pourrait étudier des relaxations plus fortes ou une formulation
+avec séparation de coupes, en mesurant leur apport au-delà du seul temps.
+
+Sur le plan algorithmique, la reconstruction complète de chaque voisin
+pourrait être remplacée en partie par des mises à jour incrémentales des
+affectations et des modifications locales du cycle. Ce gain de vitesse
+demanderait des contrôles supplémentaires pour conserver les mêmes coûts
+et ne pas introduire de dépendance cachée à l'état précédent.
+
+Enfin, une application au transport demanderait des distances de réseau,
+des demandes, des capacités, des contraintes d'implantation et une prise
+en compte de l'équité. Les instances TSPLIB et les unités de coordonnées
+ne permettent pas de conclure qu'un tracé proposé serait faisable ou
+préférable pour une agglomération réelle.
+\bilan{La traçabilité permet de vérifier les résultats et de corriger un
+défaut d'export sans modifier les calculs. Les prochaines avancées utiles
+portent sur l'équité des budgets, la robustesse des expériences et le
+réalisme des données de transport.}

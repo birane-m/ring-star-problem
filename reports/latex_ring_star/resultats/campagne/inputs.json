@@ -1,0 +1,218 @@
+[
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/ulysses16.tsp",
+    "problem": {
+      "name": "ulysses16.tsp",
+      "n": 16,
+      "p": 3,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/ulysses16.tsp",
+    "problem": {
+      "name": "ulysses16.tsp",
+      "n": 16,
+      "p": 5,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/ulysses16.tsp",
+    "problem": {
+      "name": "ulysses16.tsp",
+      "n": 16,
+      "p": 10,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/ulysses22.tsp",
+    "problem": {
+      "name": "ulysses22.tsp",
+      "n": 22,
+      "p": 3,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/ulysses22.tsp",
+    "problem": {
+      "name": "ulysses22.tsp",
+      "n": 22,
+      "p": 5,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/ulysses22.tsp",
+    "problem": {
+      "name": "ulysses22.tsp",
+      "n": 22,
+      "p": 10,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/att48.tsp",
+    "problem": {
+      "name": "att48",
+      "n": 48,
+      "p": 3,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/att48.tsp",
+    "problem": {
+      "name": "att48",
+      "n": 48,
+      "p": 5,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/att48.tsp",
+    "problem": {
+      "name": "att48",
+      "n": 48,
+      "p": 10,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/eil51.tsp",
+    "problem": {
+      "name": "eil51",
+      "n": 51,
+      "p": 3,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/eil51.tsp",
+    "problem": {
+      "name": "eil51",
+      "n": 51,
+      "p": 5,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/eil51.tsp",
+    "problem": {
+      "name": "eil51",
+      "n": 51,
+      "p": 10,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/berlin52.tsp",
+    "problem": {
+      "name": "berlin52",
+      "n": 52,
+      "p": 3,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/berlin52.tsp",
+    "problem": {
+      "name": "berlin52",
+      "n": 52,
+      "p": 5,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/berlin52.tsp",
+    "problem": {
+      "name": "berlin52",
+      "n": 52,
+      "p": 10,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/st70.tsp",
+    "problem": {
+      "name": "st70",
+      "n": 70,
+      "p": 3,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/st70.tsp",
+    "problem": {
+      "name": "st70",
+      "n": 70,
+      "p": 5,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/st70.tsp",
+    "problem": {
+      "name": "st70",
+      "n": 70,
+      "p": 10,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/kroA100.tsp",
+    "problem": {
+      "name": "kroA100",
+      "n": 100,
+      "p": 3,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/kroA100.tsp",
+    "problem": {
+      "name": "kroA100",
+      "n": 100,
+      "p": 5,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/kroA100.tsp",
+    "problem": {
+      "name": "kroA100",
+      "n": 100,
+      "p": 10,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/rd100.tsp",
+    "problem": {
+      "name": "rd100",
+      "n": 100,
+      "p": 3,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/rd100.tsp",
+    "problem": {
+      "name": "rd100",
+      "n": 100,
+      "p": 5,
+      "alpha": 1.0
+    }
+  },
+  {
+    "source": "/workspace/scratch/bf4e862fb88a/ring-star-improved/data/instances/rd100.tsp",
+    "problem": {
+      "name": "rd100",
+      "n": 100,
+      "p": 10,
+      "alpha": 1.0
+    }
+  }
+]

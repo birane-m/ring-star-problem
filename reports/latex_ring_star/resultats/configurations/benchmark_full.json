@@ -1,0 +1,25 @@
+{
+  "name": "comparison_complete",
+  "instances": [
+    "../data/instances/ulysses16.tsp", "../data/instances/ulysses22.tsp",
+    "../data/instances/att48.tsp", "../data/instances/eil51.tsp",
+    "../data/instances/berlin52.tsp", "../data/instances/st70.tsp",
+    "../data/instances/kroA100.tsp", "../data/instances/rd100.tsp"
+  ],
+  "p_values_by_instance": {
+    "ulysses16": [3, 4, 5, 8, 10, 12], "ulysses22": [3, 4, 5, 8, 10, 15],
+    "att48": [3, 5, 8, 10, 15, 20], "eil51": [3, 5, 8, 10, 15, 20],
+    "berlin52": [3, 5, 8, 10, 15, 20], "st70": [3, 5, 8, 10, 15, 20, 30],
+    "kroA100": [3, 5, 8, 10, 15, 20, 30, 40], "rd100": [3, 5, 8, 10, 15, 20, 30, 40]
+  },
+  "alphas": [0.0, 1.0, 3.0],
+  "seeds": [0, 1, 2, 3, 4],
+  "methods": ["greedy", "local_search", "tabu_search", "exact_plne"],
+  "local_iterations": 500,
+  "tabu_iterations": 200,
+  "tabu_tenure": 20,
+  "candidates_per_iteration": 30,
+  "exact_time_limit": 30,
+  "exact_max_n": 52,
+  "exact_max_p": 10
+}

@@ -1,0 +1,105 @@
+{
+  "instance": "ulysses16.tsp",
+  "n": 16,
+  "p": 10,
+  "alpha": 1.0,
+  "method": "initial_greedy",
+  "edge_weight_type": "GEO",
+  "required_station": 1,
+  "stations": [
+    1,
+    3,
+    4,
+    5,
+    9,
+    10,
+    11,
+    12,
+    15,
+    16
+  ],
+  "cycle": [
+    1,
+    4,
+    3,
+    16,
+    12,
+    10,
+    9,
+    11,
+    5,
+    15
+  ],
+  "assignments": [
+    {
+      "point": 1,
+      "station": 1
+    },
+    {
+      "point": 2,
+      "station": 3
+    },
+    {
+      "point": 3,
+      "station": 3
+    },
+    {
+      "point": 4,
+      "station": 4
+    },
+    {
+      "point": 5,
+      "station": 5
+    },
+    {
+      "point": 6,
+      "station": 15
+    },
+    {
+      "point": 7,
+      "station": 12
+    },
+    {
+      "point": 8,
+      "station": 1
+    },
+    {
+      "point": 9,
+      "station": 9
+    },
+    {
+      "point": 10,
+      "station": 10
+    },
+    {
+      "point": 11,
+      "station": 11
+    },
+    {
+      "point": 12,
+      "station": 12
+    },
+    {
+      "point": 13,
+      "station": 12
+    },
+    {
+      "point": 14,
+      "station": 12
+    },
+    {
+      "point": 15,
+      "station": 15
+    },
+    {
+      "point": 16,
+      "station": 16
+    }
+  ],
+  "costs": {
+    "metro": 68.08330714358146,
+    "walking": 8.3521085101413,
+    "total": 76.43541565372277
+  },
+  "plot": null
+}

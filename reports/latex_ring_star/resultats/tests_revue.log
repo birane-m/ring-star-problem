@@ -1,0 +1,118 @@
+test_no_solution_run_keeps_diagnostics_without_a_fake_cycle (test_artifacts.ArtifactTests.test_no_solution_run_keeps_diagnostics_without_a_fake_cycle) ... ok
+test_plot_saved_keeps_the_saved_cycle (test_artifacts.ArtifactTests.test_plot_saved_keeps_the_saved_cycle) ... ok
+test_png_pdf_svg_and_convergence_are_created (test_artifacts.ArtifactTests.test_png_pdf_svg_and_convergence_are_created) ... ok
+test_reordered_assignments_are_rejected (test_artifacts.ArtifactTests.test_reordered_assignments_are_rejected) ... ok
+test_repeated_runs_do_not_overwrite_and_are_self_contained (test_artifacts.ArtifactTests.test_repeated_runs_do_not_overwrite_and_are_self_contained) ... ok
+test_replot_has_no_dependency_on_original_input_file (test_artifacts.ArtifactTests.test_replot_has_no_dependency_on_original_input_file) ... ok
+test_tampered_cost_is_rejected_before_plotting (test_artifacts.ArtifactTests.test_tampered_cost_is_rejected_before_plotting) ... ok
+test_build_comparison_csv_merges_method_results (test_benchmark.BenchmarkTests.test_build_comparison_csv_merges_method_results) ... ok
+test_default_benchmark_p_values_are_valid_and_increasing (test_benchmark.BenchmarkTests.test_default_benchmark_p_values_are_valid_and_increasing) ... ok
+test_run_benchmark_compares_basic_methods (test_benchmark.BenchmarkTests.test_run_benchmark_compares_basic_methods) ... ok
+test_save_benchmark_csv_writes_readable_file (test_benchmark.BenchmarkTests.test_save_benchmark_csv_writes_readable_file) ... ok
+test_benchmark_command_writes_csv (test_cli.CliTests.test_benchmark_command_writes_csv) ... ok
+test_default_benchmark_output_path (test_cli.CliTests.test_default_benchmark_output_path) ... ok
+test_default_benchmark_solution_figures_directory (test_cli.CliTests.test_default_benchmark_solution_figures_directory) ... ok
+test_default_comparison_figures_directory (test_cli.CliTests.test_default_comparison_figures_directory) ... ok
+test_default_comparison_output_path (test_cli.CliTests.test_default_comparison_output_path) ... ok
+test_default_exact_result_output_path (test_cli.CliTests.test_default_exact_result_output_path) ... ok
+test_default_exact_solution_output_path (test_cli.CliTests.test_default_exact_solution_output_path) ... ok
+test_default_greedy_result_markdown_output_path (test_cli.CliTests.test_default_greedy_result_markdown_output_path) ... ok
+test_default_greedy_result_output_path (test_cli.CliTests.test_default_greedy_result_output_path) ... ok
+test_default_greedy_solution_output_path (test_cli.CliTests.test_default_greedy_solution_output_path) ... ok
+test_default_local_search_result_output_path (test_cli.CliTests.test_default_local_search_result_output_path) ... ok
+test_default_local_search_solution_output_path (test_cli.CliTests.test_default_local_search_solution_output_path) ... ok
+test_default_point_cloud_output_path (test_cli.CliTests.test_default_point_cloud_output_path) ... ok
+test_default_tabu_result_output_path (test_cli.CliTests.test_default_tabu_result_output_path) ... ok
+test_default_tabu_solution_output_path (test_cli.CliTests.test_default_tabu_solution_output_path) ... ok
+test_plot_instance_command_writes_png (test_cli.CliTests.test_plot_instance_command_writes_png) ... ok
+test_run_command_writes_plot_json_and_markdown (test_cli.CliTests.test_run_command_writes_plot_json_and_markdown) ... ok
+test_solve_exact_command_can_write_result_json (test_cli.CliTests.test_solve_exact_command_can_write_result_json) ... ok
+test_solve_exact_command_prints_solution_summary (test_cli.CliTests.test_solve_exact_command_prints_solution_summary) ... ok
+test_solve_greedy_command_can_write_result_json (test_cli.CliTests.test_solve_greedy_command_can_write_result_json) ... ok
+test_solve_greedy_command_can_write_solution_plot (test_cli.CliTests.test_solve_greedy_command_can_write_solution_plot) ... ok
+test_solve_greedy_command_prints_solution_summary (test_cli.CliTests.test_solve_greedy_command_prints_solution_summary) ... ok
+test_solve_local_search_command_can_write_result_json (test_cli.CliTests.test_solve_local_search_command_can_write_result_json) ... ok
+test_solve_local_search_command_prints_solution_summary (test_cli.CliTests.test_solve_local_search_command_prints_solution_summary) ... ok
+test_solve_tabu_command_can_write_result_json (test_cli.CliTests.test_solve_tabu_command_can_write_result_json) ... ok
+test_solve_tabu_command_prints_solution_summary (test_cli.CliTests.test_solve_tabu_command_prints_solution_summary) ... ok
+test_distance_matrix_is_symmetric_with_zero_diagonal (test_distances.DistanceTests.test_distance_matrix_is_symmetric_with_zero_diagonal) ... ok
+test_euclidean_distance (test_distances.DistanceTests.test_euclidean_distance) ... ok
+test_exact_solver_keeps_required_station (test_exact.ExactSolverTests.test_exact_solver_keeps_required_station) ... ok
+test_exact_solver_returns_valid_optimal_solution (test_exact.ExactSolverTests.test_exact_solver_returns_valid_optimal_solution) ... ok
+test_alpha_cases_are_not_merged (test_experiments.ExperimentTests.test_alpha_cases_are_not_merged) ... ok
+test_campaign_can_be_replotted_after_removing_the_original_instance (test_experiments.ExperimentTests.test_campaign_can_be_replotted_after_removing_the_original_instance) ... /tmp/tmpzknmx6l9/plot.png
+tiny p=3 α=1 greedy seed=0
+ok
+test_campaign_outputs_match_all_saved_solutions (test_experiments.ExperimentTests.test_campaign_outputs_match_all_saved_solutions) ... tiny p=3 α=0 greedy seed=0
+tiny p=3 α=0 local_search seed=0
+tiny p=3 α=0 local_search seed=1
+tiny p=3 α=0 tabu_search seed=0
+tiny p=3 α=0 tabu_search seed=1
+tiny p=3 α=2 greedy seed=0
+tiny p=3 α=2 local_search seed=0
+tiny p=3 α=2 local_search seed=1
+tiny p=3 α=2 tabu_search seed=0
+tiny p=3 α=2 tabu_search seed=1
+ok
+test_conflicting_proven_optimum_is_reported (test_experiments.ExperimentTests.test_conflicting_proven_optimum_is_reported) ... ok
+test_duplicate_comparison_rows_are_not_overwritten (test_experiments.ExperimentTests.test_duplicate_comparison_rows_are_not_overwritten) ... ok
+test_exact_skips_are_explicit_and_not_plotted_as_zero_cost (test_experiments.ExperimentTests.test_exact_skips_are_explicit_and_not_plotted_as_zero_cost) ... ok
+test_gap_is_only_computed_against_a_proven_optimum (test_experiments.ExperimentTests.test_gap_is_only_computed_against_a_proven_optimum) ... ok
+test_generator_p_values_apply_to_all_instances (test_experiments.ExperimentTests.test_generator_p_values_apply_to_all_instances) ... ok
+test_old_csv_cannot_silently_reconstruct_a_different_solution (test_experiments.ExperimentTests.test_old_csv_cannot_silently_reconstruct_a_different_solution) ... ok
+test_seed_summary_uses_mean_and_sample_standard_deviation (test_experiments.ExperimentTests.test_seed_summary_uses_mean_and_sample_standard_deviation) ... ok
+test_unknown_config_and_invalid_p_fail_before_running (test_experiments.ExperimentTests.test_unknown_config_and_invalid_p_fail_before_running) ... ok
+test_assign_to_nearest_station_assigns_stations_to_themselves (test_heuristics.HeuristicTests.test_assign_to_nearest_station_assigns_stations_to_themselves) ... ok
+test_build_greedy_solution_returns_valid_solution (test_heuristics.HeuristicTests.test_build_greedy_solution_returns_valid_solution) ... ok
+test_nearest_neighbor_cycle_starts_at_required_station (test_heuristics.HeuristicTests.test_nearest_neighbor_cycle_starts_at_required_station) ... ok
+test_select_stations_farthest_first_keeps_required_station (test_heuristics.HeuristicTests.test_select_stations_farthest_first_keeps_required_station) ... ok
+test_select_stations_grid_then_complete_keeps_required_station (test_heuristics.HeuristicTests.test_select_stations_grid_then_complete_keeps_required_station) ... ok
+test_two_opt_cycle_does_not_worsen_cycle_length (test_heuristics.HeuristicTests.test_two_opt_cycle_does_not_worsen_cycle_length) ... ok
+test_two_opt_cycle_keeps_same_stations_and_start (test_heuristics.HeuristicTests.test_two_opt_cycle_keeps_same_stations_and_start) ... ok
+test_accepts_headers_without_spaces_around_colon (test_io.TsplibLoadingTests.test_accepts_headers_without_spaces_around_colon) ... ok
+test_loads_coordinate_instance (test_io.TsplibLoadingTests.test_loads_coordinate_instance) ... ok
+test_rejects_dimension_mismatch (test_io.TsplibLoadingTests.test_rejects_dimension_mismatch) ... ok
+test_rejects_missing_coordinate_section (test_io.TsplibLoadingTests.test_rejects_missing_coordinate_section) ... ok
+test_sorts_points_by_tsplib_node_id (test_io.TsplibLoadingTests.test_sorts_points_by_tsplib_node_id) ... ok
+test_build_local_search_solution_uses_default_iteration_budget (test_metaheuristics.MetaheuristicTests.test_build_local_search_solution_uses_default_iteration_budget) ... ok
+test_build_solution_from_stations_returns_valid_solution (test_metaheuristics.MetaheuristicTests.test_build_solution_from_stations_returns_valid_solution) ... ok
+test_build_tabu_search_solution_uses_default_iteration_budget (test_metaheuristics.MetaheuristicTests.test_build_tabu_search_solution_uses_default_iteration_budget) ... ok
+test_station_swap_search_is_reproducible_with_seed (test_metaheuristics.MetaheuristicTests.test_station_swap_search_is_reproducible_with_seed) ... ok
+test_station_swap_search_never_worsens_initial_solution (test_metaheuristics.MetaheuristicTests.test_station_swap_search_never_worsens_initial_solution) ... ok
+test_tabu_search_is_reproducible_with_seed (test_metaheuristics.MetaheuristicTests.test_tabu_search_is_reproducible_with_seed) ... ok
+test_tabu_search_returns_valid_solution (test_metaheuristics.MetaheuristicTests.test_tabu_search_returns_valid_solution) ... ok
+test_more_than_eight_instances_are_not_truncated (test_plot_layouts.PlotLayoutTests.test_more_than_eight_instances_are_not_truncated) ... ok
+test_cleanup_keeps_git_environment_and_current_outputs (test_project_tools.ProjectToolTests.test_cleanup_keeps_git_environment_and_current_outputs) ... ok
+test_cleanup_preserves_an_existing_nonempty_report (test_project_tools.ProjectToolTests.test_cleanup_preserves_an_existing_nonempty_report) ... ok
+test_cleanup_rejects_a_non_project_directory (test_project_tools.ProjectToolTests.test_cleanup_rejects_a_non_project_directory) ... ok
+test_packaging_is_flat_and_excludes_local_state (test_project_tools.ProjectToolTests.test_packaging_is_flat_and_excludes_local_state) ... ok
+test_all_square_tours_are_improved_to_the_perimeter (test_regressions.AlgorithmRegressions.test_all_square_tours_are_improved_to_the_perimeter) ... ok
+test_invalid_model_parameters_fail_early (test_regressions.AlgorithmRegressions.test_invalid_model_parameters_fail_early) ... ok
+test_negative_and_nonfinite_budgets_are_rejected (test_regressions.AlgorithmRegressions.test_negative_and_nonfinite_budgets_are_rejected) ... ok
+test_p_equals_n_stops_without_fake_iterations (test_regressions.AlgorithmRegressions.test_p_equals_n_stops_without_fake_iterations) ... ok
+test_time_budget_stops_search_and_is_recorded (test_regressions.AlgorithmRegressions.test_time_budget_stops_search_and_is_recorded) ... ok
+test_trace_best_cost_is_monotone_and_matches_final_cost (test_regressions.AlgorithmRegressions.test_trace_best_cost_is_monotone_and_matches_final_cost) ... ok
+test_two_opt_uncrosses_closing_edge (test_regressions.AlgorithmRegressions.test_two_opt_uncrosses_closing_edge) ... ok
+test_unique_sampling_can_cover_the_entire_neighborhood (test_regressions.AlgorithmRegressions.test_unique_sampling_can_cover_the_entire_neighborhood) ... ok
+test_zero_iterations_does_no_improvement_work (test_regressions.AlgorithmRegressions.test_zero_iterations_does_no_improvement_work) ... ok
+test_zero_tabu_candidates_are_not_a_default_value (test_regressions.AlgorithmRegressions.test_zero_tabu_candidates_are_not_a_default_value) ... ok
+test_feasible_incumbent_is_not_an_optimality_certificate (test_regressions.ExactRegressions.test_feasible_incumbent_is_not_an_optimality_certificate) ... ok
+test_matches_independent_enumeration (test_regressions.ExactRegressions.test_matches_independent_enumeration) ... ok
+test_no_incumbent_does_not_round_fractional_values (test_regressions.ExactRegressions.test_no_incumbent_does_not_round_fractional_values) ... ok
+test_zero_constant_objective_and_duplicate_points (test_regressions.ExactRegressions.test_zero_constant_objective_and_duplicate_points) ... ok
+test_save_solution_result_json_writes_file (test_results.ResultExportTests.test_save_solution_result_json_writes_file) ... ok
+test_save_solution_result_markdown_writes_file (test_results.ResultExportTests.test_save_solution_result_markdown_writes_file) ... ok
+test_solution_result_data_uses_tsplib_numbering (test_results.ResultExportTests.test_solution_result_data_uses_tsplib_numbering) ... ok
+test_solution_result_markdown_is_human_readable (test_results.ResultExportTests.test_solution_result_markdown_is_human_readable) ... ok
+test_costs_are_computed_from_cycle_and_assignments (test_solution.SolutionTests.test_costs_are_computed_from_cycle_and_assignments) ... ok
+test_assignment_to_non_station_fails (test_validation.ValidationTests.test_assignment_to_non_station_fails) ... ok
+test_incomplete_cycle_fails (test_validation.ValidationTests.test_incomplete_cycle_fails) ... ok
+test_missing_required_station_fails (test_validation.ValidationTests.test_missing_required_station_fails) ... ok
+test_valid_solution_passes (test_validation.ValidationTests.test_valid_solution_passes) ... ok
+test_save_point_cloud_png_writes_file (test_visualization.VisualizationTests.test_save_point_cloud_png_writes_file) ... ok
+test_save_solution_png_writes_file (test_visualization.VisualizationTests.test_save_solution_png_writes_file) ... ok
+
+----------------------------------------------------------------------
+Ran 101 tests in 13.641s
+
+OK

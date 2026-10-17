@@ -1,0 +1,90 @@
+\chapter{Construire une première solution réalisable}
+\section{Pourquoi commencer par une référence simple}
+Une construction rapide fournit à la fois une solution immédiatement utilisable
+et un point de départ commun aux recherches. Elle aide à mesurer ce que
+l'amélioration apporte réellement. Le terme \code{greedy} de l'interface désigne
+ici une chaîne de règles déterministes : sélection géométrique par grille,
+affectation au plus proche, construction du cycle puis amélioration 2-opt.
+Ce n'est pas une optimisation exacte de chacun de ces sous-problèmes.
+
+La matrice des distances est calculée une seule fois par exécution et partagée
+par les étapes suivantes. Tous les coûts utilisent les distances non arrondies.
+Les règles d'égalité sur les indices rendent la construction reproductible sans
+avoir à répéter artificiellement la même méthode sur plusieurs graines.
+
+\section{Choisir les stations avec une grille}
+On calcule le rectangle englobant le nuage de points, puis
+$q=\lceil\sqrt{p}\rceil$. Le rectangle est partagé en $q\times q$ cellules.
+Dans chaque cellule non vide, on choisit le point le plus proche du centre de
+la cellule. La frontière supérieure de la dernière ligne et de la dernière
+colonne est incluse pour ne pas perdre les points extrêmes.
+
+Cette règle couvre spatialement le nuage, mais ne fournit pas nécessairement
+$p$ stations : des cellules sont vides, $q^2$ peut dépasser $p$ et l'ajout de
+la station imposée modifie le compte. Le programme ajuste donc la sélection.
+S'il manque des stations, il ajoute le point dont la distance à la station déjà
+sélectionnée la plus proche est maximale. Cette complétion privilégie les zones
+encore éloignées d'une station. Si la sélection est trop grande, il retire des
+stations jugées redondantes par leur proximité aux autres, en préservant la
+station imposée.
+
+Le critère de complétion n'est pas une minimisation exacte de la somme des
+accès : c'est une règle de couverture. De même, la grille ignore le coût futur
+de l'anneau et le poids $\alpha$. Cette simplification explique pourquoi une
+recherche sur les stations peut ensuite réduire sensiblement le coût global.
+
+\section{Affecter les points et ordonner les stations}
+Une fois $S$ fixé, chaque point non-station est affecté à la station la plus
+proche. Cette étape optimise exactement les affectations conditionnellement à
+$S$. Les stations s'affectent à elles-mêmes, même si deux points distincts ont
+des coordonnées identiques.
+
+Le cycle démarre au sommet imposé. À chaque étape, la station non visitée la
+plus proche de la station courante est ajoutée à la séquence. La dernière
+station est ensuite reliée implicitement à la première. La règle du plus proche
+voisin évite une énumération de tous les ordres possibles, mais elle peut
+conserver des détours liés aux choix effectués plus tôt.
+
+\section{Améliorer le cycle avec 2-opt}
+Le mouvement 2-opt enlève deux arêtes $(a,b)$ et $(c,d)$, puis les remplace
+par $(a,c)$ et $(b,d)$ en inversant l'ordre du segment intermédiaire.
+Pour des distances symétriques, la variation de longueur est
+\begin{equation}
+\Delta L=d_{ac}+d_{bd}-d_{ab}-d_{cd}.
+\end{equation}
+Il suffit donc de comparer quatre distances, sans réévaluer tout le cycle
+pour chaque paire. L'inversion est retenue si elle raccourcit strictement
+le parcours au-delà d'une petite tolérance relative. La recherche reprend
+alors sur le nouveau cycle jusqu'à ne plus trouver d'amélioration 2-opt.
+
+La première station reste fixe dans la représentation. Les échanges impliquant
+l'arête de fermeture sont autorisés : ignorer cette arête laisserait de côté
+des améliorations valides. Un test de non-régression sur un carré vérifie
+notamment ce cas.
+
+À stations fixées et pour $\alpha>0$, raccourcir l'anneau réduit le coût total
+sans toucher aux affectations. Pour $\alpha=0$, 2-opt améliore seulement la
+présentation du cycle ; la valeur de l'objectif est inchangée. La fin de 2-opt
+fournit une stabilité vis-à-vis de ce voisinage sur l'ordre des stations, avec
+les tolérances numériques du programme. Elle ne prouve pas que le cycle est
+un optimum du voyageur de commerce.
+
+\section{Algorithme de construction et coût de calcul}
+La procédure peut être résumée sans détailler le code :
+\begin{enumerate}
+\item Calculer les distances et sélectionner les candidats de la grille.
+\item Ajouter la station imposée et ajuster l'ensemble pour obtenir $|S|=p$.
+\item Calculer les affectations les plus proches.
+\item Construire un cycle par plus proche voisin depuis la racine.
+\item Appliquer 2-opt au cycle et vérifier la solution complète.
+\end{enumerate}
+La matrice demande un temps et une mémoire d'ordre $n^2$. Une affectation
+directe demande $O(np)$ comparaisons et le plus proche voisin $O(p^2)$.
+Une passe de candidats 2-opt examine $O(p^2)$ échanges ; le nombre de passes
+dépend des améliorations réalisées. La version de la grille parcourt les
+points pour chaque cellule. Ces choix restent simples à contrôler et adaptés
+aux tailles étudiées, sans constituer une démonstration de passage à très
+grande échelle.
+\bilan{La construction donne une référence déterministe, réalise exactement
+les affectations à stations fixées et améliore approximativement l'ordre du
+cycle. La sélection reste le principal levier des recherches suivantes.}

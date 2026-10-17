@@ -1,0 +1,9 @@
+{
+  "python": "3.12.14",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "packages": {
+    "pulp": "3.3.2",
+    "matplotlib": "3.11.2"
+  },
+  "source_sha256": "c9e5e4ae672b41d4c156c10d4892eef1a259d95b5a9f07740acf96c821cc9b2f"
+}
