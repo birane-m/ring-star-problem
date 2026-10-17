@@ -106,6 +106,10 @@ class ExperimentTests(unittest.TestCase):
             self.assertEqual(row["mean_cost"],"")
             self.assertEqual(row["successful_runs"],"0")
             self.assertIn("skipped",row["statuses"])
+            raw=read_rows(folder/"runs.csv")
+            self.assertEqual(len(raw),1)
+            self.assertEqual(raw[0]["status"],"skipped")
+            self.assertEqual(json.loads((folder/"completion.json").read_text())["runs"],len(raw))
 
     def test_unknown_config_and_invalid_p_fail_before_running(self):
         with tempfile.TemporaryDirectory() as tmp:

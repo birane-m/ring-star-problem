@@ -155,6 +155,8 @@ def run_campaign(config_path: str | Path, output_root: str | Path = "outputs", *
                     records.append(record_from_run(problem, result, relative))
                     saved_runs.append((problem, result, run_folder, source))
                     save_benchmark_csv(records, folder / "runs.csv")
+        # Flush terminal skipped cases as well as solved runs.
+        save_benchmark_csv(records, folder / "runs.csv")
         rows = summarize_records(records)
         save_summary_csv(rows, folder / "summary.csv")
         if make_plots:
