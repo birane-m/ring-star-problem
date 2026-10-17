@@ -11,9 +11,11 @@ env/
 .ruff_cache/
 .matplotlib-cache/
 
-code/img/
-code/.venv/
 outputs/
-_legacy/
 
 .DS_Store
+
+# Packaging et fichiers générés
+*.egg-info/
+build/
+dist/
